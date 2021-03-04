@@ -41,6 +41,7 @@ kramdown:
 plugins:
   - jekyll-feed
   - jekyll-paginate
+  - jekyll-postcss
 
 # Exclude from processing.
 # The following items will not be processed, by default.
@@ -53,7 +54,6 @@ plugins:
 exclude:
   - .sass-cache/
   - .jekyll-cache/
-  - css/uikit/
   - gemfiles/
   - Gemfile
   - Gemfile.lock
@@ -62,4 +62,6 @@ exclude:
   - Makefile
   - package.json
   - package-lock.json
+  - postcss.config.js
+  - tailwind.config.js
 

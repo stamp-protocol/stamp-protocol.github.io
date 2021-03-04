@@ -4,5 +4,11 @@
   "description": "Stamp website",
   "author": "Andrew Lyon",
   "license": "GPLv3",
-  "devDependencies": {}
+  "devDependencies": {
+    "autoprefixer": "^10.2.4",
+    "postcss": "^8.2.7",
+    "postcss-scss": "^3.0.4",
+    "tailwindcss": "^2.0.3"
+  },
+  "dependencies": {}
 }
