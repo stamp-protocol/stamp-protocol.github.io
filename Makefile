@@ -1,6 +1,7 @@
 .PHONY: all build watch clean
 
 export SHELL := /bin/bash
+export NODE_ENV ?= production
 
 DEST ?= public
 DRAFTS ?= --drafts
