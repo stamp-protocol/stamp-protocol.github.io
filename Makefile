@@ -3,7 +3,7 @@
 export SHELL := /bin/bash
 export NODE_ENV ?= production
 
-DEST ?= public
+DEST ?= docs
 DRAFTS ?= --drafts
 
 all: build
