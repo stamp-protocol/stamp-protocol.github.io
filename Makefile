@@ -9,10 +9,7 @@ DRAFTS ?= --drafts
 all: build
 
 build:
-	bundle exec jekyll build $(DRAFTS) -d $(DEST) --config _config.yml,_config.local.yml
-
-watch:
-	bundle exec jekyll build $(DRAFTS) -d $(DEST) --config _config.yml,_config.local.yml --watch
+	bundle exec jekyll build $(DRAFTS) -d $(DEST) --config _config.yml
 
 deploy: DRAFTS :=
 deploy: all
