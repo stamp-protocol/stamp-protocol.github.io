@@ -4,3 +4,32 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+	h1 {@apply text-6xl mb-8 font-serif;}
+	h2 {@apply text-4xl mb-6 font-serif;}
+	h3 {@apply text-2xl mb-4 font-serif;}
+	a {
+		& {@apply text-blue-500;}
+		&:hover {@apply underline;}
+	}
+	p, pre {@apply mb-4;}
+	p, pre {
+		&:last-child {@apply mb-0;}
+	}
+	em {@apply italic;}
+
+	ul {@apply list-disc ml-4 pl-4;}
+	div + h2,
+	div + h3,
+	p + h2,
+	p + h3,
+	pre + h2,
+	pre + h3,
+	ul + p {@apply pt-4;}
+	code {@apply text-red-900;}
+}
+
+@layer components {
+	.codeblock {@apply bg-gray-100 p-4 overflow-auto;}
+}
+

@@ -1,7 +1,522 @@
 ---
-layout: default
+layout: page
 title: "Stamp: a cryptographic identity system"
 ---
 
-hello
+<h1>Stamp protocol</h1>
+
+<p>
+Stamp is a distributed, cryptographic identity system.
+</p>
+
+<p>
+Users make claims about their identity, and others verify and "stamp" these claims to create a
+web of trust. Stamp draws inspiration from PGP as a method of determining trust
+among peers and Keybase as a way to prove ownership over various decentralized
+locations (DNS, HTTP, etc).
+</p>
+
+<p>
+A Stamp identity consists of three main parts:
+</p>
+
+<div class="grid md:grid-cols-3 gap-4">
+	{% capture body %}
+		<p>
+		The keychain is a collection of cryptographic keys that allow you to
+		securely update or publish your identity. This includes setting up a
+		recovery policy, making claims, and stamping the claims of others.
+		</p>
+		<p>
+		The keychain also holds keys that can be used to send messages to other
+		identities or to cryptographically sign messages or files.
+		</p>
+	{% endcapture %}
+	{% include components/id-part.html title="Keychain" body=body classes="bg-indigo-100" %}
+
+	{% capture body %}
+		<p>
+		A claim is a verifiable assertion about a personally-identifying piece
+		of information. This can be your name, email, a photo, or even things like
+		a state-issued ID.
+		</p>
+		<p>
+		Others can stamp your claims, which is how trust flows through the stamp
+		network.
+		</p>
+		<p>
+		Claims can be either public or private (encrypted).
+		</p>
+	{% endcapture %}
+	{% include components/id-part.html title="Claims" body=body classes="bg-yellow-100" %}
+
+	{% capture body %}
+		<p>
+		Forwards allow other systems to use your identity as source of truth.
+		</p>
+		<p>
+		Your followers on a decentralized social network could follow
+		<code>stamp://s0f-sWNQSsHECicy/forwards/FabNet</code> which would forward
+		to your "Fabnet" profile, allowing you to update your identity to point to
+		a new host without having to rebuild your follower network.
+		</p>
+	{% endcapture %}
+	{% include components/id-part.html title="Forwards" body=body classes="bg-green-100" %}
+</div>
+
+<p>
+Stamp Identities are published to StampNet (or, they will be, once it is built),
+a p2p network allowing discovery and verification of identities by anybody with
+internet access.
+</p>
+
+<h2 id="implementations">Implementations - CLI</h2>
+
+<p>
+The current implementation of Stamp is built in Rust. It consists of two primary
+codebases: <a href="https://github.com/stamp-protocol/core">Stamp core</a> which
+provides a functional API for interacting with identities and the
+<a href="https://github.com/stamp-protocol/cli">command-line interface</a>, which
+allows interacting with the Stamp protocol from the <span class="text-green-900">welcoming comfort</span>
+of your favorite terminal.
+</p>
+
+<p>
+To get started, turn the computer on. Then <a href="https://github.com/stamp-protocol/cli#getting-started">download and build the CLI</a>.
+Good! Now let's start playing with stamp.
+</p>
+<p>
+First, let's create an identity.
+</p>
+
+<pre class="codeblock"><code>$ ./stamp id new</code></pre>
+
+<p>
+The program will guide you to creating your first identity, and once you're done,
+it will be added to your local identity storage. Your identity will have three
+claims: your identity claim, your name claim, and your email claim. You can view
+them like so:
+</p>
+
+<pre class="codeblock"><code>$ ./stamp claim list
+ ID (short)       | Type     | Value                 | Created      | # stamps 
+------------------+----------+-----------------------+--------------+----------
+ GCEEQIGwOVBKBrGT | identity | b0ndAF-2sh3Zyodg      | Mar 10, 2021 | 0 
+ hElGR6vsTewh7TQv | name     | Zefram Cochrane       | Mar 10, 2021 | 0 
+ alwCMEZN_w3XCkyG | email    | zephram@starfleet.org | Mar 10, 2021 | 0 
+</code></pre>
+
+<p>
+But why settle just for what's given by default? Let's add a claim of our own! 
+</p>
+
+<pre class="codeblock"><code>$ ./stamp claim new photo /path/to/picture-of-you.jpg</code></pre>
+
+<p>
+Well done, your identity has a photo now. People who know what you look like can
+now stamp your photo claim, adding trust to your identity!
+</p>
+
+<p>
+Stamp can also handle another type of claim: one that can be verified immediately.
+Both the <code>domain</code> and <code>url</code> claim types. Let's try it out
+(note that you'll need to be able to write a public website to do this).
+</p>
+
+<pre class="codeblock"><code>$ ./stamp claim new url
+Enter the URL you own: https://news.ycombinator.com/user?id=xXx_Zeph420_xXx                                                                                                                                          
+Claim added! You can finalize this claim and make it verifiable instantly to others by updating the URL
+https://news.ycombinator.com/user?id=xXx_Zeph420_xXx to contain one of the following two values:
+
+
+  stamp:IWbkEc4cCozDnGoJ5Ckz9mSU9EfNQwOvIDF5Gohk8uAXIZ1Lvq2kL06T1uBXCC7135b2AnJj1lsIORVAmN72AAA
+  stamp:IWbkEc4cCozDnGoJ
+</code></pre>
+
+<p>
+So let's update your HackerNews profile at the URL you entered to contain
+<code>stamp:IWbkEc4cCozDnGoJ</code>. Now for the cool bit:
+</p>
+
+<pre class="codeblock"><code>$ ./stamp claim check IWbkEc4cCozDnGoJ
+
+The claim IWbkEc4cCozDnGoJ has been verified!
+
+It is very likely that the identity b0ndAF-2sh3Zyodg owns the resource
+https://news.ycombinator.com/user?id=xXx_Zeph420_xXx
+</code></pre>
+
+<p>
+Notice you don't need a central server to check the validity of the claim
+(suck it, Keybase). You can do it from the comfort of your 430 sq ft $5,700/mo
+San Francisco apartment.
+</p>
+
+<p>
+Ok, we've set up our claims. Now what? How do we actually, you know, <em>Stamp</em>
+things? Let's <a href="./zephram.stamp">download Zephram's identity</a> (who I may
+later refer to as "Zeph"), generated using <code>./stamp id publish</code>. Now
+import it into your local storage.
+</p>
+
+<pre class="codeblock"><code>$ ./stamp id import /path/to/zephram.stamp</code></pre>
+
+<p>
+Now that it's in our local storage, let's view the claims on this identity.
+</p>
+
+<pre class="codeblock"><code>$ ./stamp claim list --id b0ndAF
+ ID (short)       | Type     | Value                                                | Created      | # stamps 
+------------------+----------+------------------------------------------------------+--------------+----------
+ GCEEQIGwOVBKBrGT | identity | b0ndAF-2sh3Zyodg                                     | Mar 10, 2021 | 0 
+ hElGR6vsTewh7TQv | name     | Zefram Cochrane                                      | Mar 10, 2021 | 0 
+ alwCMEZN_w3XCkyG | email    | zephram@starfleet.org                                | Mar 10, 2021 | 0 
+ LprnsHJj42Z9jMOC | address  | <private>                                            | Mar 10, 2021 | 0 
+ cRR6CeO8yy37B5dG | photo    | <4008 bytes>                                         | Mar 10, 2021 | 0 
+ IWbkEc4cCozDnGoJ | url      | https://news.ycombinator.com/user?id=xXx_Zeph420_xXx | Mar 11, 2021 | 0 
+</code></pre>
+
+<p>
+Normally, you'd only stamp a claim if you were actually going to verify it. But
+because we're just doing a tutorial, let's just pick a claim and <em>pretend</em>
+you've verified it. We're going to do the <code>identity</code> claim.
+</p>
+
+<pre class="codeblock"><code>$ ./stamp stamp new GCEEQIGwOVBKBrGT
+You are about to stamp the claim GCEEQIGwOVBKBrGT made by the identity b0ndAF-2sh3Zyodg.
+Effectively, you are vouching for them and that their claim is true. You can specify your confidence in the claim:
+    none
+        you are not verifying the claim at all, but wish to stamp it anyway
+    low
+        you have done a quick and dirty verification of the claim
+    medium
+        you're doing a decent amount of verification, such as having them click a verification link in email
+    high
+        you have verified the claim extensively (birth certificates, retinal scans, fingerprint matching, etc)
+    extreme
+        you have known this person for the last 50 years and can be absolutely certain that the claim they are making is correct
+        and they are not a hologram or an android imposter
+
+How confident are you in this claim?: low
+Would you like your stamp to expire on a certain date? [y/N]: n
+</code></pre>
+
+<p>
+Once we're done, it spits out our stamp:
+</p>
+
+<pre class="codeblock"><code>---
+id:
+  Ed25519: si8fa8SiXvb4jTbIPNpAwLj6PjImJT1ZA_ou5cm9t9dsIwaXPTLrtkmgpaOqyWQ0moD-uSvhnGV4fF8nKOcgCg
+entry:
+  stamper:
+    Ed25519: b0ndAF-2sh3ZyodgXdYicqPv7CmyKBrj7tCNOtqoEVIXZdt6f4a_ORm8kYnEwtld4ndSMQjIez7LOewFJAvXAw
+  stampee:
+    Ed25519: b0ndAF-2sh3ZyodgXdYicqPv7CmyKBrj7tCNOtqoEVIXZdt6f4a_ORm8kYnEwtld4ndSMQjIez7LOewFJAvXAw
+  claim_id:
+    Ed25519: GCEEQIGwOVBKBrGT1LCQTtCCrorknw4UaqqmiZuDPVd-p-mi2Uh-ptw0F41H11HiXknCMWPeR66b1GvT3StHBA
+  confidence: Low
+  date_signed: "2021-03-12T04:58:10.360456817Z"
+  expires: ~
+</code></pre>
+
+<p>
+Now you must find a way to communicate this stamp to Zeph. Conveniently, he made
+an email claim, so you can go ahead and send it to <code>zephram@starfleet.org</code>.
+On the receiving end, Zephy might do something like this:
+</p>
+
+<pre class="codeblock"><code>$ ./stamp stamp accept --id b0n ./play/stamp 
+Stamp d7JpGIOpot5gkbDu accepted!
+</code></pre>
+
+<p>
+Zeph thanks you for your trust. He won't let you down.
+</p>
+
+<h2 id="architecture">Architecture</h2>
+
+<p>
+Each identity is a DAG (Directed Acyclic Graph) of modifications created by the
+identity's owner which are signed by one of the keys belonging to the identity.
+Each transaction, except for the first, references the transaction(s) directly before it.
+This creates a chain of modifications that, when applied in order, build a full
+identity that can be cryptographically verified.
+</p>
+
+<div class="grid md:grid-cols-3 gap-4">
+	{% include components/transaction.html prev="[]" txid="0a4b41" body="CreateIdentity" classes="text-red-600" %}
+	{% include components/transaction.html prev='[<span class="text-red-600">0a4b41</span>]' txid="f8bb77" body="MakeClaim" classes="text-green-600" %}
+	{% include components/transaction.html prev='[<span class="text-green-600">f8bb77</span>]' txid="9221d1" body="AddSubkey" classes="text-blue-600" %}
+</div>
+
+<p>
+All private data within an identity (private keys, private claim data) is encrypted
+by a master key generated from a passphrase of your choosing. Even if your full Stamp
+identity is compromised, it is still protected by your master key.
+</p>
+
+<p>
+Here's what a published identity looks like (granted, this is a test identity, we still
+haven't convinced Zephram to use Stamp yet):
+</p>
+<pre class="codeblock max-h-64"><code>---
+publish_signature:
+  Ed25519: UnHzrqvZacUn0rNKSnpJUkNF8bMM7iYbHQYPR2MdKxnKfvyD4w-Zy3-HbVwlpnMLpX9Sofem1NPiUPpXIQnrCw
+publish_date: "2021-03-11T02:34:00.242774158Z"
+identity:
+  transactions:
+    - V1:
+        id:
+          Alpha:
+            Ed25519: b0ndAF-2sh3ZyodgXdYicqPv7CmyKBrj7tCNOtqoEVIXZdt6f4a_ORm8kYnEwtld4ndSMQjIez7LOewFJAvXAw
+        entry:
+          created: "2021-03-11T02:22:53.217044153Z"
+          previous_transactions: []
+          body:
+            CreateIdentityV1:
+              - Ed25519:
+                  - pxxN1bI2n0awjgtlv9XQ1jMe2Ad0gxKaDlUsiQdNZQg
+                  - ~
+              - Ed25519:
+                  - Dw6oppSXugOrw_Loo5I8zcfW5MwohE01hKNaS0VFQDQ
+                  - ~
+              - Ed25519:
+                  - X0zdQd75zutXP5z5AalnQTAgVyNDLbJxjQcdB0D_EGk
+                  - ~
+              - Ed25519:
+                  - duTYQNXiotlBhMYDukaLbaXa3gGHpIf3z_RkbLiSEYc
+                  - ~
+    - V1:
+        id:
+          Root:
+            Ed25519: GCEEQIGwOVBKBrGT1LCQTtCCrorknw4UaqqmiZuDPVd-p-mi2Uh-ptw0F41H11HiXknCMWPeR66b1GvT3StHBA
+        entry:
+          created: "2021-03-11T02:23:02.904887791Z"
+          previous_transactions:
+            - Alpha:
+                Ed25519: b0ndAF-2sh3ZyodgXdYicqPv7CmyKBrj7tCNOtqoEVIXZdt6f4a_ORm8kYnEwtld4ndSMQjIez7LOewFJAvXAw
+          body:
+            MakeClaimV1:
+              Identity:
+                Ed25519: b0ndAF-2sh3ZyodgXdYicqPv7CmyKBrj7tCNOtqoEVIXZdt6f4a_ORm8kYnEwtld4ndSMQjIez7LOewFJAvXAw
+    - V1:
+        id:
+          Root:
+            Ed25519: hElGR6vsTewh7TQvlbJTwkMuIG6xP8LCGl4eeeP5lE0rKoTG9Q60l0PwCBfQ1Nr8dI2mZ3EEQAtjqapjs31bDg
+        entry:
+          created: "2021-03-11T02:23:15.289853416Z"
+          previous_transactions:
+            - Root:
+                Ed25519: GCEEQIGwOVBKBrGT1LCQTtCCrorknw4UaqqmiZuDPVd-p-mi2Uh-ptw0F41H11HiXknCMWPeR66b1GvT3StHBA
+          body:
+            MakeClaimV1:
+              Name:
+                Public: Zefram Cochrane
+    - V1:
+        id:
+          Root:
+            Ed25519: alwCMEZN_w3XCkyGUv4hjodGJ-3LxE-0WASu1cd-S6rLgldcNqwk4mcwZz51WAYzkZA8NZTinPyNzf5SDLi9Aw
+        entry:
+          created: "2021-03-11T02:23:15.293144612Z"
+          previous_transactions:
+            - Root:
+                Ed25519: hElGR6vsTewh7TQvlbJTwkMuIG6xP8LCGl4eeeP5lE0rKoTG9Q60l0PwCBfQ1Nr8dI2mZ3EEQAtjqapjs31bDg
+          body:
+            MakeClaimV1:
+              Email:
+                Public: zephram@starfleet.org
+    - V1:
+        id:
+          Root:
+            Ed25519: sSdIlUagdITqiU1toyHYdiHz6iGRBgSYHULPXoexewoQFjCg4gMyFBfJ9uItUDD7_BLuMAAAr7t-P2zfg6umBg
+        entry:
+          created: "2021-03-11T02:23:15.296004996Z"
+          previous_transactions:
+            - Root:
+                Ed25519: alwCMEZN_w3XCkyGUv4hjodGJ-3LxE-0WASu1cd-S6rLgldcNqwk4mcwZz51WAYzkZA8NZTinPyNzf5SDLi9Aw
+          body:
+            AddSubkeyV1:
+              - Sign:
+                  Ed25519:
+                    - XgFKkRI0WRy1mzMWUw1qvHpPUZwNSVFuKguuVrBKQ9Q
+                    - ~
+              - "default:sign"
+              - A default key for signing documents or messages.
+    - V1:
+        id:
+          Root:
+            Ed25519: SKPD9FWSmdq7E6XNrbdYb3aHGwRiz47DUPVxmGec-pIneB7lLf4DSNWV75vUCyafqM7RKb8hxKaYc7lOXGpLCA
+        entry:
+          created: "2021-03-11T02:23:15.297267453Z"
+          previous_transactions:
+            - Root:
+                Ed25519: sSdIlUagdITqiU1toyHYdiHz6iGRBgSYHULPXoexewoQFjCg4gMyFBfJ9uItUDD7_BLuMAAAr7t-P2zfg6umBg
+          body:
+            AddSubkeyV1:
+              - Crypto:
+                  Curve25519Xsalsa20Poly1305:
+                    - dZzJL-GHTiJYB25b-XqV91reacxE9xHblx1Jyi-VrE8
+                    - ~
+              - "default:crypto"
+              - A default key for receiving private messages.
+    - V1:
+        id:
+          Root:
+            Ed25519: KYyUUlw1jWEf2j50zbeDETZATGBu0UKwYZF337dEAoQJx6z9MiKb7bZdxCHXk0FM6kGWDRipjOZC1vgDR9tKCw
+        entry:
+          created: "2021-03-11T02:23:15.298924006Z"
+          previous_transactions:
+            - Root:
+                Ed25519: SKPD9FWSmdq7E6XNrbdYb3aHGwRiz47DUPVxmGec-pIneB7lLf4DSNWV75vUCyafqM7RKb8hxKaYc7lOXGpLCA
+          body: Private
+    - V1:
+        id:
+          Root:
+            Ed25519: LprnsHJj42Z9jMOC8pFM1rVwhpHFunbyddjafTZUfLGc2Cbt74Sxwk3jzWHaIIntkKfW5BAOiwcbSBkath0zCw
+        entry:
+          created: "2021-03-11T02:25:34.943430262Z"
+          previous_transactions:
+            - Root:
+                Ed25519: KYyUUlw1jWEf2j50zbeDETZATGBu0UKwYZF337dEAoQJx6z9MiKb7bZdxCHXk0FM6kGWDRipjOZC1vgDR9tKCw
+          body:
+            MakeClaimV1:
+              HomeAddress:
+                Private:
+                  - HmacSha512: 8dv3WU58cFEsGEoV6_hCefKoplYtHQlZ_lgImOsIuFmt3Y_KSLjO6TZTO_lEWL58toDFvf_I1MTj-MEEsJwzhQ
+                  - ~
+    - V1:
+        id:
+          Root:
+            Ed25519: cRR6CeO8yy37B5dG1XLHUkmBJw65PcahMWIgp9pCLDTcgQ-xP2RVmsfT7UKIWjrMssQnEyjpakUcIgHpmuhvBg
+        entry:
+          created: "2021-03-11T02:33:51.454997635Z"
+          previous_transactions:
+            - Root:
+                Ed25519: LprnsHJj42Z9jMOC8pFM1rVwhpHFunbyddjafTZUfLGc2Cbt74Sxwk3jzWHaIIntkKfW5BAOiwcbSBkath0zCw
+          body:
+            MakeClaimV1:
+              Photo:
+                Public: _9j_4AAQSkZJRgABAQEASABIAAD_2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN-gXz_2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz_wgARCACZAJkDAREAAhEBAxEB_8QAGQAAAgMBAAAAAAAAAAAAAAAAAgMAAQQF_8QAFwEBAQEBAAAAAAAAAAAAAAAAAAECA__aAAwDAQACEAMQAAABz8qy6kCKsFKQiFAlllC9BqqhRB_Kto1Wg1aFLdXJKkoooql6BVkIQ0c7ZCqlhlhSyIXYVXGSkaQhCEHYtw2w6qqBi4gwOjoIztZdZohCENmUiWssIXTIRDShupsOdNKms1zVkIQhsxYQZqDYNIlqNMtDlfWRAlz0u5shCG3mtZZWlEWSsmnqQ0ZQGdOcym5lQhDbzsSUJbWlqgJSDCM9aIZbzdYzMVUIQ140UhkoGnqIgFdMq0uzeoHLuUXEqEIbMaKSy7q2mSIFVQ-XfQDlSnJ1hVzCEIa8bJkoixsrCQCpSXbaBcVXNvNGoCRLWG3G7mZVwy6FSFxQ-0yKmNIjWMaIspKqzbnbEKRqsM6iqoolMa2IAwBLQKFMlzmOhnQoCvIARVqci7WroWg7nnw-R1pIVlJnjGhrqIudGW3NAUFK-1qKucDMl3roFkTKykYrhRms0rc1agMlfRIihuMSas72DgTnM2LHiDNqOV0tKUWNURlxlFJsmiXQEc2ZlsSCLFgmuqmhlOV1p3I3GaKHS75oBVZ5m1uxYqwQKGtEuuAVo-zKmaCFHSmnLDCzUUq7EWWVQVS7syx1azAZoaIOlNaFSf_EACYQAAIBBAEEAgMBAQAAAAAAAAABAgMQERIhIDAxMhNBIzNCBEP_2gAIAQEAAQUCVsmw-b4NTXpz1oyZM9evaybWwY62sk447Goo9KMGuoqcmlTkPKJ9fCMn2yMHIjzKcVinhikTqZdGpKBFtE6jk5D7O-pKo5OKYpSGJpGNnFSRiriSw5D7P9SaclsaYEkKKFeSFTiift2MZEkhDtsbHyRN2RbyVPbsJWRJjkblLEiUNZ_HmSisS8y9u19MaMEPZx3SWojzL77UbOyRH1nJCdpL8j7OrFwO2RelN4KkN1TbtOnlyg10owYFgb48t9H2Y5tJ20jIqUtbKPDmIVpGdkOyyao9TIqgnlReSQuT44EvWZC3lzZT_WOyEnaZOOpF8wawNYMsfmSI8L6fmb5pv8ZgwIR9VfEuacfK4IPk0RIflH8ytSlrKS1FIyhCJsr_AK8kuCKUjDg88Wxylxnh-LQqZWjsjOFTjsT5_wA78y9KUhPhxNrP2fgm8ivGZsS0z8URRXyT5g_L9Fw4O2R3dkO8fEPaA_Nb1P8AmQv_AP_EABoRAAIDAQEAAAAAAAAAAAAAAAERADBAIGD_2gAIAQMBAT8B9corlFFF0ahUchpGQVGH3QsHBxOPb__EABQRAQAAAAAAAAAAAAAAAAAAAID_2gAIAQIBAT8BSH__xAApEAABAwIFBAICAwAAAAAAAAABABEhAhAgMDFRYRIiQHEyQQOBUtHx_9oACAEBAAY_AvPjxZ8GQycCFomOYdhqmVRoEBFyy4W6MIN8ul-lfFesrlkenRa9xTOW2t2kokvK7QU0ts6-6Su4TvlUnqH9ItuiHg65DmRsjnBAqVCmxz-kri0Wq9-AMB8AKb1eBK5TGxqBU5XOTomtonGmJ04waLZTOAv_AIuVxbTEcht1xYb4Xw-sf46sX3b2E1jtadCuMIp3Q4KKBtuLzYxh6al2rm0pzqi_8rftNaFrlTSCodTU6cFgqjb95wsVSqvdxg__xAAmEAEAAgIBBAEEAwEAAAAAAAABABEhMUEQUWFxgSAwobGRwfDx_9oACAEBAAE_IasWnEHzFX0joJntFcTUvotRi5cuX01qJ3FVGMIM4geelvM3xG-f4TI5ixfquFY2mWecIYOJh6kA4Szhx9gTANyokuLFcbaGKpYqvMQ3Bnca12wr0Lv6gh4QyL6L9XcQGfRy-J7yP-5dI0LLjmS3wLgXZw5gA1DNs0g8Rs8MsWOeOY7Kze1zb6q6VG0ouy7lEURSLuKwV_FAD5y24bVCULed4rMbzSrwTbH3AGD0kexOBeo32b-w10OOI6YUgu2e8tDpEDa5eqAdRcEGoMBEQRitiOoFAGvquX0fmjHSalzLL1EUPpiB-kHa_aKoJZVd8T5_MfqOirslUzSYOnZaIMjuMlnjAA8dpSUqCqEz-0KOITvLdwrMYK17IipqK-ZajMtu7jv7N04i4iHRUrivxQECmIblQQ0_Z1WMNt9FxpFQ7svdk0-moTFAxBzh2mSH8RM_SLShuMupiPnUU0kYEqJLzDAzBlG3QS21jmpU4ONxM5B-IirGLyeirLcIoPxFcTP0io70KLM3BRL7KFuaEFBTFWxqJC3REXbXaVzLkeYr0bQVmKCkK6HKFn9QsCpeHiYLf9hoPe44juXWpZhoZMxlWhWJmMZ7Stf9QzbW-IvwnqgteZfYlQm1_cVIHcRpxLn3cuvXQ5TGPMULMK8RmcTGvxFb3ARfEoAPE8EWqzZPJ_VMw0Bi3bgiLy8I5th-kMZ-f4lHki0TFLDkdfE3uzU2EGHCqeYnL7YHocjwjodmYBdlBrvdw1IYjA2kbOZ2l7HEbyrMElkWCWXuVmHwJqgrt2jekoVz8T_VQwl_mYYajsdpdTD8TIidON-GZHzLKcIHszNak4uUzNId4eyqMxk4wqWYJ81Pc6HicvSzn0cw1Pwpun7Cf4-5-InPxGOfof_aAAwDAQACAAMAAAAQ9-Q77rbigk_TnwZTrEAA20gMSA_AAAGJgTr0IAAAPgSSbvkgAAACZ0SQtFAA6IYE0Yk_AAXe6SfUMrAAnT_FC9FWAALzCQiJBNAAgZ1pEgpZtAivFG8sfvXggadhxhptmKJp_cYIhjDGbxyMkwZfDzvxvXgQ4NSyrFdANef3Vi4IOZTQd6yQ6sL0yGqQvKPUNYrQWgvI_8QAHBEAAwEBAQEBAQAAAAAAAAAAAAERECAwQCEx_9oACAEDAQE_EEJlL8VKX7p8aJ8LELH7Qm8EPylEEFlNaJh-KEIJlJlF50hfh_dRdXgmoNU_m0XDGPl6xeILILRopdeITxatsKMY0QmvYIXK4eNEGiDZcuXlYxsuseUuvE-FrKJ9TXiFtG8Y16ITLlJl_fc2IQ49Qu2LYXSj1C7fouP_xAAaEQACAwEBAAAAAAAAAAAAAAABEQAQIDBA_9oACAECAQE_EMriIPCIKG3ByG1FFBFFRtRdALIiioUeQMFmGOgY8DYgMcceHTggh7OOnBBD1WR3eR5BQ8Qp8HhcHYjp-U2MvChFDAhsaWhsWaMejT0KGhBZ4CO1agEVCjzOxRv_xAAmEAEAAgMAAgICAgMBAQAAAAABABEhMUFRYXGBIKEQkbHB8NHx_9oACAEBAAE_EEQILEo1qWaGJcXn3Cpf1AlxLLqDWB9y7sj6IfKH4wy1UiPuFsQrstRm5g2xxlpaW-YKrTcpiW_EMWq8xG7uFVb9QXRuUYeZ5MPEQ40zwCpYabnueQPlj-o2AInE_mn8UepYvxNUIHKh6Q8trGHJVc5EHz4hFkvEuzjCq8wZUyzZ332PuFryRfyMuDc4VETFZgKwQAuYzJNSvjxFVqHwSmMKDo5AaBt0FXqDghbF9PP7leS_XIsUj9zd-WQrMW0CpiF2JGwsuqi40C0ao39_UZqs4S06YhPVRswsB0MLR1EhrRitAAbUKq_u5fgWVZVZGjLA2xbAL_7Nf3KMaaZ3Z1EJ6QBSPSCvyPllgJyWsTLcFx0FF2uMHkLlIHCAUxnzUUwymEAe2ISy4KmXfMtWBetss5kJ1DP3GUMvHlmOGraIbW7Xydg7D1AYq8bJrJqXGy9ltnz2Ds3-NT9JQIy4ZlQMU0rFKFvct4OSvAICthz1MLY_EGEYcRcZJjObjFhWaQmou_PYCAlX5hNmqmVp5lyj8-IaUCqnNR_EwjYjdzGpAddSsH9wAYKNQMrihs2Zg2NjKu-JrE3i77l0ys6yTL0LwNKlmQ11wxuLcNDhBHUJt-Jlhzcor3EQBRbbFAlAtQIYJRxAKAx5gIOncAcbLHHzHyyxZYkmzmhuABP9IY3VZE23ImP4jCpdmYVkfqKDolfcYldhUKvrPLXyolaMESC4rSQoxxY8YAtV0hLg9RRs1-5aFsin3-UFMDTCrqOyCBDdVVRW1p-5Qt36gOEya3EC17l-HKplbgP-IRVZ6gpp5uAXgu58ozc1_IWymBWY5-4Dgh1WyCghXVRYs5EuoQvsRmEs51Bc2lMOxhbbyeGIKhGgeSixllLZhb1EVdVvIiDA-nEqV8_xYUaxEyDEFNxfEqQS82-ooBFyyjpARzkye55FXd0TIXzMHoomK5CpajsDUpyaCCbN-JSAcYsr5wsG9ZhctKY733M5LGitiVoFVGKr4l5Zsb4TEsLAjbyFZNFV_kxnd3XfENZeUorkulWUdcsAMCLtK-oYjvfqVh38QLPUzRY-oEXyXljEVfMKFc-XqIbkLa5Eos7oNMJVle5Rqn_UK0oNvfUtZtOmmOlDKtZ_1IEgyqFnP_ImIUGEdhhXughUUx7iFKIpb57jUXoaG9vMHpJPyMBkVXmWQ0RqrAhcAUM7jltU6pupgAtqVBIBuvEfJRw9GPYLEPqpyFNZ0NjfGBAs1o6-oCbbfxLANNBBwkrhREAfENHlT6ioCrTB0xS9K2hqtkcJwbBhjDLUOjApFFt4iaxj3G-BG4mouBqL3oC4kCgR-WEvywxfmHO64RFLwe9iK7RRfTVTGFp1P_oxWYnG7zNqsMFm3iDI-Q4S4tezGE8fMG9hNd01LpGxXPYL4M_PcxvKqVD0F-zUIvT7ljDdQ80ZqAQ8A51BWCUh4Kg711RyGOhpIJG3RORUr8BNfMZZboMkx5IrQKtIdjVwUANRBsGr_wA_MuIA401j-4hKBZgXO5tZzyCllFcChfEG9rI5SxpNUlRJYHGKloq81M5CnQDo9PuJ2xUPaxXzE4dOKZl3AlBh0tiBba_cV2ivmfH8AFdYtRRhWh3yV5btzEyN8hJhnCuSmHkqfUtHGH1GKeq9NRBVSacv3BVDM6fqNpiCPB9NQ4KVaxTKVGXoGmqV1Xmo6KyAEtTxaOVqwqI1eRByJBKz5-Zv8iP7Zo_M6-X-DSMbPmftp-hNf-WZ-7_BLr8Ju-SH7p_rHT8fx__Z
+</code></pre>
+
+<h3>Keychain</h3>
+<p>
+There are four main keys an identity uses for either updating or publishing.
+</p>
+
+<div class="">
+	{% capture body %}
+		<p>
+		One key to rule them all. It is used to create the identity, and can be
+		used to replace any of the other keys that control the identity.
+		</p>
+	{% endcapture %}
+	{% include components/key.html title="Alpha" body=body classes="bg-indigo-100" %}
+
+	{% capture body %}
+		<p>
+		The policy key is used to create recovery policies, allowing the identity
+		owner to replace compromised keys with newly-generated ones. A valid
+		recovery can replace the policy, publish, and root keys.
+		</p>
+	{% endcapture %}
+	{% include components/key.html title="Policy" body=body classes="bg-yellow-100" %}
+
+	<div class="grid sm:grid-cols-2 gap-4">
+		{% capture body %}
+			<p>
+			The publish key allows signing and dating all published versions of a
+			Stamp identity, useful for proving its overall correctness and preventing
+			tampering.
+			</p>
+		{% endcapture %}
+		{% include components/key.html title="Publish" body=body classes="bg-green-100" %}
+
+		{% capture body %}
+			<p>
+			The root key is effectively the daily-use key of the identity. It is used
+			to sign claims, create stamps on the claims of others, manage your subkeys,
+			and update any other part of your identity.
+			</p>
+		{% endcapture %}
+		{% include components/key.html title="Root" body=body classes="bg-purple-100" %}
+	</div>
+</div>
+
+<p>
+The keychain also holds "subkeys" which are either revoked/replaced keys from the
+list above, or any number of active keys which allow the identity to encrypt or
+sign messages or files.
+</p>
+
+<h2 id="whyyy">Why??</h2>
+
+<p>
+Stamp fills a void in an interesting space: self-owned online identity. Although PGP already
+exists as an identity system and trust network, it falls short in a few area. First,
+PGP only allows a handful of claims: name, email, and photo. The Stamp protocol allows you to
+make any number of claims, from your name, to your age, to your home address, but
+also custom claims, such as a state-issued ID number or being a member of an
+organization. Each of these claims can be individually stamped, allowing much
+more granular trust. For instance, applications might only allow membership if
+you have a state-issued ID stamped by a government agency, or you're a bona fide
+member of the local trapeze club. Want to write a review
+on that oven mitt you bought on Amazon? Better make a DMV appointment! PGP also
+falls flat in another area: the keyservers. They allow anybody to create any
+number of signatures on your identity without your approval. In Stamp, any changes
+to your identity must be <em>approved and signed</em> by you, and a single unified
+p2p network replaces a set of federated keyservers that seem to always be broken.
+</p>
+
+<p>
+Keybase attempted to fix some of the issues with PGP but, bless their hearts, they
+decided to do it using a centralized service. Then they had to go and get bought by
+Zoom. Oops. Stamp retains much of the functionality of Keybase, such as claiming
+ownership of domains and www locations (except for Twitter because Twitter sucks)
+but allows verification directly in the client. No need to trust a central third
+party.
+</p>
+
+<p>
+We envision a world where online discourse can be more personal. As it stands,
+people must rely on corporations (Facebook, Google, etc) to vet the identities
+of their users, but sometimes (read: always) these companies don't have your
+best interests in mind. Shouldn't <em>you</em> decide whether the person you're
+talking to is Bob from down the street or a Russian troll who wants to convince
+you that there are people out there who will stop at nothing to get you to eat
+only soy products? Stamp allows you to build your own trust, and does so in a
+way that integrates with institutional identity providers. Google or Facebook
+or your local DMV can always stamp your identity, and anybody who trusts them
+will then have some measure of trust for you! 
+</p>
+
+<p>
+Beyond online discourse, state-run identity systems are not that great. At
+least in the United States, a person's identity comes down to a nine-digit
+number that acts as both a username and a password. This is the stupidest
+thing in existence, and causes an immense amount of problems. We're not
+delusional enough to think that if we build Stamp, states will start using
+it <em>just because it's so great</em>, but leaving the next identity
+system up to lawmakers (the ones who bring snowballs into congress or
+lobby every year to ban encryption) is just as foolish. Perhaps we can
+lead by example, and in a perfect world, states might integrate with Stamp
+once they realize that, yes, it is great and the SSA is due for a few
+updates. But Stamp doesn't care about states: it's a sovereign system! No,
+this doesn't mean you can drive without a drivers license, but it does mean
+that it exists beyond any state, whether corporate or national, and so your
+identity is <em>always yours</em>.
+</p>
+
+<p>
+As more of the world moves online, it's important that we keep, cherish, and
+protect anonymous online interactions and privacy. But it's also important that
+we allow building systems that need to rely on trusted identity, such as voting
+or non-anonymous communication platforms, in a way that profit-chasing
+corporations or antiquated state bureaus don't end up holding the reigns.
+</p>
+
+<p>
+Join Stamp and take back your online identity!
+</p>
 

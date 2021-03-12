@@ -1,0 +1,151 @@
+---
+publish_signature:
+  Ed25519: y5mvkfPUWDsTItTGV6ubwT2xke7glmhl1O70ZPggMop0Z9JFp1B9v2SZ2IJ3R3m-7fZZWxWOmbXtwvu2tOzpCQ
+publish_date: "2021-03-11T18:17:29.149006622Z"
+identity:
+  transactions:
+    - V1:
+        id:
+          Alpha:
+            Ed25519: b0ndAF-2sh3ZyodgXdYicqPv7CmyKBrj7tCNOtqoEVIXZdt6f4a_ORm8kYnEwtld4ndSMQjIez7LOewFJAvXAw
+        entry:
+          created: "2021-03-11T02:22:53.217044153Z"
+          previous_transactions: []
+          body:
+            CreateIdentityV1:
+              - Ed25519:
+                  - pxxN1bI2n0awjgtlv9XQ1jMe2Ad0gxKaDlUsiQdNZQg
+                  - ~
+              - Ed25519:
+                  - Dw6oppSXugOrw_Loo5I8zcfW5MwohE01hKNaS0VFQDQ
+                  - ~
+              - Ed25519:
+                  - X0zdQd75zutXP5z5AalnQTAgVyNDLbJxjQcdB0D_EGk
+                  - ~
+              - Ed25519:
+                  - duTYQNXiotlBhMYDukaLbaXa3gGHpIf3z_RkbLiSEYc
+                  - ~
+    - V1:
+        id:
+          Root:
+            Ed25519: GCEEQIGwOVBKBrGT1LCQTtCCrorknw4UaqqmiZuDPVd-p-mi2Uh-ptw0F41H11HiXknCMWPeR66b1GvT3StHBA
+        entry:
+          created: "2021-03-11T02:23:02.904887791Z"
+          previous_transactions:
+            - Alpha:
+                Ed25519: b0ndAF-2sh3ZyodgXdYicqPv7CmyKBrj7tCNOtqoEVIXZdt6f4a_ORm8kYnEwtld4ndSMQjIez7LOewFJAvXAw
+          body:
+            MakeClaimV1:
+              Identity:
+                Ed25519: b0ndAF-2sh3ZyodgXdYicqPv7CmyKBrj7tCNOtqoEVIXZdt6f4a_ORm8kYnEwtld4ndSMQjIez7LOewFJAvXAw
+    - V1:
+        id:
+          Root:
+            Ed25519: hElGR6vsTewh7TQvlbJTwkMuIG6xP8LCGl4eeeP5lE0rKoTG9Q60l0PwCBfQ1Nr8dI2mZ3EEQAtjqapjs31bDg
+        entry:
+          created: "2021-03-11T02:23:15.289853416Z"
+          previous_transactions:
+            - Root:
+                Ed25519: GCEEQIGwOVBKBrGT1LCQTtCCrorknw4UaqqmiZuDPVd-p-mi2Uh-ptw0F41H11HiXknCMWPeR66b1GvT3StHBA
+          body:
+            MakeClaimV1:
+              Name:
+                Public: Zefram Cochrane
+    - V1:
+        id:
+          Root:
+            Ed25519: alwCMEZN_w3XCkyGUv4hjodGJ-3LxE-0WASu1cd-S6rLgldcNqwk4mcwZz51WAYzkZA8NZTinPyNzf5SDLi9Aw
+        entry:
+          created: "2021-03-11T02:23:15.293144612Z"
+          previous_transactions:
+            - Root:
+                Ed25519: hElGR6vsTewh7TQvlbJTwkMuIG6xP8LCGl4eeeP5lE0rKoTG9Q60l0PwCBfQ1Nr8dI2mZ3EEQAtjqapjs31bDg
+          body:
+            MakeClaimV1:
+              Email:
+                Public: zephram@starfleet.org
+    - V1:
+        id:
+          Root:
+            Ed25519: sSdIlUagdITqiU1toyHYdiHz6iGRBgSYHULPXoexewoQFjCg4gMyFBfJ9uItUDD7_BLuMAAAr7t-P2zfg6umBg
+        entry:
+          created: "2021-03-11T02:23:15.296004996Z"
+          previous_transactions:
+            - Root:
+                Ed25519: alwCMEZN_w3XCkyGUv4hjodGJ-3LxE-0WASu1cd-S6rLgldcNqwk4mcwZz51WAYzkZA8NZTinPyNzf5SDLi9Aw
+          body:
+            AddSubkeyV1:
+              - Sign:
+                  Ed25519:
+                    - XgFKkRI0WRy1mzMWUw1qvHpPUZwNSVFuKguuVrBKQ9Q
+                    - ~
+              - "default:sign"
+              - A default key for signing documents or messages.
+    - V1:
+        id:
+          Root:
+            Ed25519: SKPD9FWSmdq7E6XNrbdYb3aHGwRiz47DUPVxmGec-pIneB7lLf4DSNWV75vUCyafqM7RKb8hxKaYc7lOXGpLCA
+        entry:
+          created: "2021-03-11T02:23:15.297267453Z"
+          previous_transactions:
+            - Root:
+                Ed25519: sSdIlUagdITqiU1toyHYdiHz6iGRBgSYHULPXoexewoQFjCg4gMyFBfJ9uItUDD7_BLuMAAAr7t-P2zfg6umBg
+          body:
+            AddSubkeyV1:
+              - Crypto:
+                  Curve25519Xsalsa20Poly1305:
+                    - dZzJL-GHTiJYB25b-XqV91reacxE9xHblx1Jyi-VrE8
+                    - ~
+              - "default:crypto"
+              - A default key for receiving private messages.
+    - V1:
+        id:
+          Root:
+            Ed25519: KYyUUlw1jWEf2j50zbeDETZATGBu0UKwYZF337dEAoQJx6z9MiKb7bZdxCHXk0FM6kGWDRipjOZC1vgDR9tKCw
+        entry:
+          created: "2021-03-11T02:23:15.298924006Z"
+          previous_transactions:
+            - Root:
+                Ed25519: SKPD9FWSmdq7E6XNrbdYb3aHGwRiz47DUPVxmGec-pIneB7lLf4DSNWV75vUCyafqM7RKb8hxKaYc7lOXGpLCA
+          body: Private
+    - V1:
+        id:
+          Root:
+            Ed25519: LprnsHJj42Z9jMOC8pFM1rVwhpHFunbyddjafTZUfLGc2Cbt74Sxwk3jzWHaIIntkKfW5BAOiwcbSBkath0zCw
+        entry:
+          created: "2021-03-11T02:25:34.943430262Z"
+          previous_transactions:
+            - Root:
+                Ed25519: KYyUUlw1jWEf2j50zbeDETZATGBu0UKwYZF337dEAoQJx6z9MiKb7bZdxCHXk0FM6kGWDRipjOZC1vgDR9tKCw
+          body:
+            MakeClaimV1:
+              HomeAddress:
+                Private:
+                  - HmacSha512: 8dv3WU58cFEsGEoV6_hCefKoplYtHQlZ_lgImOsIuFmt3Y_KSLjO6TZTO_lEWL58toDFvf_I1MTj-MEEsJwzhQ
+                  - ~
+    - V1:
+        id:
+          Root:
+            Ed25519: cRR6CeO8yy37B5dG1XLHUkmBJw65PcahMWIgp9pCLDTcgQ-xP2RVmsfT7UKIWjrMssQnEyjpakUcIgHpmuhvBg
+        entry:
+          created: "2021-03-11T02:33:51.454997635Z"
+          previous_transactions:
+            - Root:
+                Ed25519: LprnsHJj42Z9jMOC8pFM1rVwhpHFunbyddjafTZUfLGc2Cbt74Sxwk3jzWHaIIntkKfW5BAOiwcbSBkath0zCw
+          body:
+            MakeClaimV1:
+              Photo:
+                Public: _9j_4AAQSkZJRgABAQEASABIAAD_2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN-gXz_2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz_wgARCACZAJkDAREAAhEBAxEB_8QAGQAAAgMBAAAAAAAAAAAAAAAAAgMAAQQF_8QAFwEBAQEBAAAAAAAAAAAAAAAAAAECA__aAAwDAQACEAMQAAABz8qy6kCKsFKQiFAlllC9BqqhRB_Kto1Wg1aFLdXJKkoooql6BVkIQ0c7ZCqlhlhSyIXYVXGSkaQhCEHYtw2w6qqBi4gwOjoIztZdZohCENmUiWssIXTIRDShupsOdNKms1zVkIQhsxYQZqDYNIlqNMtDlfWRAlz0u5shCG3mtZZWlEWSsmnqQ0ZQGdOcym5lQhDbzsSUJbWlqgJSDCM9aIZbzdYzMVUIQ140UhkoGnqIgFdMq0uzeoHLuUXEqEIbMaKSy7q2mSIFVQ-XfQDlSnJ1hVzCEIa8bJkoixsrCQCpSXbaBcVXNvNGoCRLWG3G7mZVwy6FSFxQ-0yKmNIjWMaIspKqzbnbEKRqsM6iqoolMa2IAwBLQKFMlzmOhnQoCvIARVqci7WroWg7nnw-R1pIVlJnjGhrqIudGW3NAUFK-1qKucDMl3roFkTKykYrhRms0rc1agMlfRIihuMSas72DgTnM2LHiDNqOV0tKUWNURlxlFJsmiXQEc2ZlsSCLFgmuqmhlOV1p3I3GaKHS75oBVZ5m1uxYqwQKGtEuuAVo-zKmaCFHSmnLDCzUUq7EWWVQVS7syx1azAZoaIOlNaFSf_EACYQAAIBBAEEAgMBAQAAAAAAAAABAgMQERIhIDAxMhNBIzNCBEP_2gAIAQEAAQUCVsmw-b4NTXpz1oyZM9evaybWwY62sk447Goo9KMGuoqcmlTkPKJ9fCMn2yMHIjzKcVinhikTqZdGpKBFtE6jk5D7O-pKo5OKYpSGJpGNnFSRiriSw5D7P9SaclsaYEkKKFeSFTiift2MZEkhDtsbHyRN2RbyVPbsJWRJjkblLEiUNZ_HmSisS8y9u19MaMEPZx3SWojzL77UbOyRH1nJCdpL8j7OrFwO2RelN4KkN1TbtOnlyg10owYFgb48t9H2Y5tJ20jIqUtbKPDmIVpGdkOyyao9TIqgnlReSQuT44EvWZC3lzZT_WOyEnaZOOpF8wawNYMsfmSI8L6fmb5pv8ZgwIR9VfEuacfK4IPk0RIflH8ytSlrKS1FIyhCJsr_AK8kuCKUjDg88Wxylxnh-LQqZWjsjOFTjsT5_wA78y9KUhPhxNrP2fgm8ivGZsS0z8URRXyT5g_L9Fw4O2R3dkO8fEPaA_Nb1P8AmQv_AP_EABoRAAIDAQEAAAAAAAAAAAAAAAERADBAIGD_2gAIAQMBAT8B9corlFFF0ahUchpGQVGH3QsHBxOPb__EABQRAQAAAAAAAAAAAAAAAAAAAID_2gAIAQIBAT8BSH__xAApEAABAwIFBAICAwAAAAAAAAABABEhAhAgMDFRYRIiQHEyQQOBUtHx_9oACAEBAAY_AvPjxZ8GQycCFomOYdhqmVRoEBFyy4W6MIN8ul-lfFesrlkenRa9xTOW2t2kokvK7QU0ts6-6Su4TvlUnqH9ItuiHg65DmRsjnBAqVCmxz-kri0Wq9-AMB8AKb1eBK5TGxqBU5XOTomtonGmJ04waLZTOAv_AIuVxbTEcht1xYb4Xw-sf46sX3b2E1jtadCuMIp3Q4KKBtuLzYxh6al2rm0pzqi_8rftNaFrlTSCodTU6cFgqjb95wsVSqvdxg__xAAmEAEAAgIBBAEEAwEAAAAAAAABABEhMUEQUWFxgSAwobGRwfDx_9oACAEBAAE_IasWnEHzFX0joJntFcTUvotRi5cuX01qJ3FVGMIM4geelvM3xG-f4TI5ixfquFY2mWecIYOJh6kA4Szhx9gTANyokuLFcbaGKpYqvMQ3Bnca12wr0Lv6gh4QyL6L9XcQGfRy-J7yP-5dI0LLjmS3wLgXZw5gA1DNs0g8Rs8MsWOeOY7Kze1zb6q6VG0ouy7lEURSLuKwV_FAD5y24bVCULed4rMbzSrwTbH3AGD0kexOBeo32b-w10OOI6YUgu2e8tDpEDa5eqAdRcEGoMBEQRitiOoFAGvquX0fmjHSalzLL1EUPpiB-kHa_aKoJZVd8T5_MfqOirslUzSYOnZaIMjuMlnjAA8dpSUqCqEz-0KOITvLdwrMYK17IipqK-ZajMtu7jv7N04i4iHRUrivxQECmIblQQ0_Z1WMNt9FxpFQ7svdk0-moTFAxBzh2mSH8RM_SLShuMupiPnUU0kYEqJLzDAzBlG3QS21jmpU4ONxM5B-IirGLyeirLcIoPxFcTP0io70KLM3BRL7KFuaEFBTFWxqJC3REXbXaVzLkeYr0bQVmKCkK6HKFn9QsCpeHiYLf9hoPe44juXWpZhoZMxlWhWJmMZ7Stf9QzbW-IvwnqgteZfYlQm1_cVIHcRpxLn3cuvXQ5TGPMULMK8RmcTGvxFb3ARfEoAPE8EWqzZPJ_VMw0Bi3bgiLy8I5th-kMZ-f4lHki0TFLDkdfE3uzU2EGHCqeYnL7YHocjwjodmYBdlBrvdw1IYjA2kbOZ2l7HEbyrMElkWCWXuVmHwJqgrt2jekoVz8T_VQwl_mYYajsdpdTD8TIidON-GZHzLKcIHszNak4uUzNId4eyqMxk4wqWYJ81Pc6HicvSzn0cw1Pwpun7Cf4-5-InPxGOfof_aAAwDAQACAAMAAAAQ9-Q77rbigk_TnwZTrEAA20gMSA_AAAGJgTr0IAAAPgSSbvkgAAACZ0SQtFAA6IYE0Yk_AAXe6SfUMrAAnT_FC9FWAALzCQiJBNAAgZ1pEgpZtAivFG8sfvXggadhxhptmKJp_cYIhjDGbxyMkwZfDzvxvXgQ4NSyrFdANef3Vi4IOZTQd6yQ6sL0yGqQvKPUNYrQWgvI_8QAHBEAAwEBAQEBAQAAAAAAAAAAAAERECAwQCEx_9oACAEDAQE_EEJlL8VKX7p8aJ8LELH7Qm8EPylEEFlNaJh-KEIJlJlF50hfh_dRdXgmoNU_m0XDGPl6xeILILRopdeITxatsKMY0QmvYIXK4eNEGiDZcuXlYxsuseUuvE-FrKJ9TXiFtG8Y16ITLlJl_fc2IQ49Qu2LYXSj1C7fouP_xAAaEQACAwEBAAAAAAAAAAAAAAABEQAQIDBA_9oACAECAQE_EMriIPCIKG3ByG1FFBFFRtRdALIiioUeQMFmGOgY8DYgMcceHTggh7OOnBBD1WR3eR5BQ8Qp8HhcHYjp-U2MvChFDAhsaWhsWaMejT0KGhBZ4CO1agEVCjzOxRv_xAAmEAEAAgMAAgICAgMBAQAAAAABABEhMUFRYXGBIKEQkbHB8NHx_9oACAEBAAE_EEQILEo1qWaGJcXn3Cpf1AlxLLqDWB9y7sj6IfKH4wy1UiPuFsQrstRm5g2xxlpaW-YKrTcpiW_EMWq8xG7uFVb9QXRuUYeZ5MPEQ40zwCpYabnueQPlj-o2AInE_mn8UepYvxNUIHKh6Q8trGHJVc5EHz4hFkvEuzjCq8wZUyzZ332PuFryRfyMuDc4VETFZgKwQAuYzJNSvjxFVqHwSmMKDo5AaBt0FXqDghbF9PP7leS_XIsUj9zd-WQrMW0CpiF2JGwsuqi40C0ao39_UZqs4S06YhPVRswsB0MLR1EhrRitAAbUKq_u5fgWVZVZGjLA2xbAL_7Nf3KMaaZ3Z1EJ6QBSPSCvyPllgJyWsTLcFx0FF2uMHkLlIHCAUxnzUUwymEAe2ISy4KmXfMtWBetss5kJ1DP3GUMvHlmOGraIbW7Xydg7D1AYq8bJrJqXGy9ltnz2Ds3-NT9JQIy4ZlQMU0rFKFvct4OSvAICthz1MLY_EGEYcRcZJjObjFhWaQmou_PYCAlX5hNmqmVp5lyj8-IaUCqnNR_EwjYjdzGpAddSsH9wAYKNQMrihs2Zg2NjKu-JrE3i77l0ys6yTL0LwNKlmQ11wxuLcNDhBHUJt-Jlhzcor3EQBRbbFAlAtQIYJRxAKAx5gIOncAcbLHHzHyyxZYkmzmhuABP9IY3VZE23ImP4jCpdmYVkfqKDolfcYldhUKvrPLXyolaMESC4rSQoxxY8YAtV0hLg9RRs1-5aFsin3-UFMDTCrqOyCBDdVVRW1p-5Qt36gOEya3EC17l-HKplbgP-IRVZ6gpp5uAXgu58ozc1_IWymBWY5-4Dgh1WyCghXVRYs5EuoQvsRmEs51Bc2lMOxhbbyeGIKhGgeSixllLZhb1EVdVvIiDA-nEqV8_xYUaxEyDEFNxfEqQS82-ooBFyyjpARzkye55FXd0TIXzMHoomK5CpajsDUpyaCCbN-JSAcYsr5wsG9ZhctKY733M5LGitiVoFVGKr4l5Zsb4TEsLAjbyFZNFV_kxnd3XfENZeUorkulWUdcsAMCLtK-oYjvfqVh38QLPUzRY-oEXyXljEVfMKFc-XqIbkLa5Eos7oNMJVle5Rqn_UK0oNvfUtZtOmmOlDKtZ_1IEgyqFnP_ImIUGEdhhXughUUx7iFKIpb57jUXoaG9vMHpJPyMBkVXmWQ0RqrAhcAUM7jltU6pupgAtqVBIBuvEfJRw9GPYLEPqpyFNZ0NjfGBAs1o6-oCbbfxLANNBBwkrhREAfENHlT6ioCrTB0xS9K2hqtkcJwbBhjDLUOjApFFt4iaxj3G-BG4mouBqL3oC4kCgR-WEvywxfmHO64RFLwe9iK7RRfTVTGFp1P_oxWYnG7zNqsMFm3iDI-Q4S4tezGE8fMG9hNd01LpGxXPYL4M_PcxvKqVD0F-zUIvT7ljDdQ80ZqAQ8A51BWCUh4Kg711RyGOhpIJG3RORUr8BNfMZZboMkx5IrQKtIdjVwUANRBsGr_wA_MuIA401j-4hKBZgXO5tZzyCllFcChfEG9rI5SxpNUlRJYHGKloq81M5CnQDo9PuJ2xUPaxXzE4dOKZl3AlBh0tiBba_cV2ivmfH8AFdYtRRhWh3yV5btzEyN8hJhnCuSmHkqfUtHGH1GKeq9NRBVSacv3BVDM6fqNpiCPB9NQ4KVaxTKVGXoGmqV1Xmo6KyAEtTxaOVqwqI1eRByJBKz5-Zv8iP7Zo_M6-X-DSMbPmftp-hNf-WZ-7_BLr8Ju-SH7p_rHT8fx__Z
+    - V1:
+        id:
+          Root:
+            Ed25519: IWbkEc4cCozDnGoJ5Ckz9mSU9EfNQwOvIDF5Gohk8uAXIZ1Lvq2kL06T1uBXCC7135b2AnJj1lsIORVAmN72AA
+        entry:
+          created: "2021-03-11T18:04:42.269684928Z"
+          previous_transactions:
+            - Root:
+                Ed25519: cRR6CeO8yy37B5dG1XLHUkmBJw65PcahMWIgp9pCLDTcgQ-xP2RVmsfT7UKIWjrMssQnEyjpakUcIgHpmuhvBg
+          body:
+            MakeClaimV1:
+              Url:
+                Public: "https://news.ycombinator.com/user?id=xXx_Zeph420_xXx"
