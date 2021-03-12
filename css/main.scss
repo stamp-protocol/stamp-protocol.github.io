@@ -8,17 +8,12 @@
 	h1 {@apply text-6xl mb-8 font-serif;}
 	h2 {@apply text-4xl mb-6 font-serif;}
 	h3 {@apply text-2xl mb-4 font-serif;}
-	a {
-		& {@apply text-blue-500;}
-		&:hover {@apply underline;}
-	}
+	a {@apply text-blue-500;}
+	a:hover {@apply underline;}
 	p, pre {@apply mb-4;}
-	p, pre {
-		&:last-child {@apply mb-0;}
-	}
+	p:last-child, pre:last-child {@apply mb-0;}
 	em {@apply italic;}
 
-	ul {@apply list-disc ml-4 pl-4;}
 	div + h2,
 	div + h3,
 	p + h2,
