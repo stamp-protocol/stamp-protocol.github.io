@@ -25,6 +25,6 @@
 }
 
 @layer components {
-	.codeblock {@apply bg-gray-100 p-4 overflow-auto;}
+	.codeblock {@apply bg-gray-100 p-4 overflow-auto max-h-80;}
 }
 
