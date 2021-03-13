@@ -81,9 +81,8 @@ A Stamp identity consists of three main parts:
 	<strong>Claims</strong>
 	
 		<p>
-		A claim is a verifiable assertion about a personally-identifying piece
-		of information. This can be your name, email, a photo, or even things like
-		a state-issued ID.
+		A claim is a signed, verifiable assertion about a personally-identifying piece
+		of information like your name, email, a photo, or even a state-issued ID.
 		</p>
 		<p>
 		Others can stamp your claims, which is how trust flows through the stamp
@@ -123,6 +122,12 @@ a p2p network allowing discovery and verification of identities by anybody with
 internet access.
 </p>
 
+<p>
+It's important to note that while Stamp is a protocol, there is currently no
+formal definition of the protocol, and there will not be until the implementation
+is stable.
+</p>
+
 <h2 id="implementations">Implementations - CLI</h2>
 
 <p>
@@ -152,15 +157,15 @@ them like so:
 </p>
 
 <pre class="codeblock"><code>$ ./stamp claim list
- ID (short)       | Type     | Value                 | Created      | # stamps 
+ ID (short)       | Type     | Value                 | Created      | # stamps
 ------------------+----------+-----------------------+--------------+----------
- GCEEQIGwOVBKBrGT | identity | b0ndAF-2sh3Zyodg      | Mar 10, 2021 | 0 
- hElGR6vsTewh7TQv | name     | Zefram Cochrane       | Mar 10, 2021 | 0 
- alwCMEZN_w3XCkyG | email    | zephram@starfleet.org | Mar 10, 2021 | 0 
+ GCEEQIGwOVBKBrGT | identity | b0ndAF-2sh3Zyodg      | Mar 10, 2021 | 0
+ hElGR6vsTewh7TQv | name     | Zefram Cochrane       | Mar 10, 2021 | 0
+ alwCMEZN_w3XCkyG | email    | zephram@starfleet.org | Mar 10, 2021 | 0
 </code></pre>
 
 <p>
-But why settle just for what's given by default? Let's add a claim of our own! 
+But why settle just for what's given by default? Let's add a claim of our own!
 </p>
 
 <pre class="codeblock"><code>$ ./stamp claim new photo /path/to/picture-of-you.jpg</code></pre>
@@ -178,7 +183,7 @@ public website to do this).
 </p>
 
 <pre class="codeblock"><code>$ ./stamp claim new url
-Enter the URL you own: https://news.ycombinator.com/user?id=xXx_Zeph420_xXx                                                                                                                                          
+Enter the URL you own: https://news.ycombinator.com/user?id=xXx_Zeph420_xXx
 Claim added! You can finalize this claim and make it verifiable instantly to others by updating the URL
 https://news.ycombinator.com/user?id=xXx_Zeph420_xXx to contain one of the following two values:
 
@@ -189,7 +194,7 @@ https://news.ycombinator.com/user?id=xXx_Zeph420_xXx to contain one of the follo
 
 <p>
 So let's update your HackerNews profile at the URL you entered to contain
-<code>stamp:IWbkEc4cCozDnGoJ</code>. Now things get spicy:
+<code>stamp:IWbkEc4cCozDnGoJ</code>. Done? Now things get spicy:
 </p>
 
 <pre class="codeblock"><code>$ ./stamp claim check IWbkEc4cCozDnGoJ
@@ -208,7 +213,7 @@ San Francisco apartment.
 </p>
 
 <p>
-Ok, we've set up our claims. Now what? How do we actually, you know, <em>Stamp</em> &copy;
+Ok, we've set up our claims. Now what? How do we actually, you know, <em>Stamp&trade;</em>
 things? Let's <a href="./zephram.stamp">download Zephram's identity</a> (who I may
 later refer to as "Zeph"), generated using <code>./stamp id publish</code>. Now
 import it into your local storage.
@@ -221,20 +226,20 @@ Now that it's in our local storage, let's view the claims on this identity.
 </p>
 
 <pre class="codeblock"><code>$ ./stamp claim list --id b0ndAF
- ID (short)       | Type     | Value                                                | Created      | # stamps 
+ ID (short)       | Type     | Value                                                | Created      | # stamps
 ------------------+----------+------------------------------------------------------+--------------+----------
- GCEEQIGwOVBKBrGT | identity | b0ndAF-2sh3Zyodg                                     | Mar 10, 2021 | 0 
- hElGR6vsTewh7TQv | name     | Zefram Cochrane                                      | Mar 10, 2021 | 0 
- alwCMEZN_w3XCkyG | email    | zephram@starfleet.org                                | Mar 10, 2021 | 0 
- LprnsHJj42Z9jMOC | address  | &lt;private&gt;                                            | Mar 10, 2021 | 0 
- cRR6CeO8yy37B5dG | photo    | &lt;4008 bytes&gt;                                         | Mar 10, 2021 | 0 
- IWbkEc4cCozDnGoJ | url      | https://news.ycombinator.com/user?id=xXx_Zeph420_xXx | Mar 11, 2021 | 0 
+ GCEEQIGwOVBKBrGT | identity | b0ndAF-2sh3Zyodg                                     | Mar 10, 2021 | 0
+ hElGR6vsTewh7TQv | name     | Zefram Cochrane                                      | Mar 10, 2021 | 0
+ alwCMEZN_w3XCkyG | email    | zephram@starfleet.org                                | Mar 10, 2021 | 0
+ LprnsHJj42Z9jMOC | address  | &lt;private&gt;                                            | Mar 10, 2021 | 0
+ cRR6CeO8yy37B5dG | photo    | &lt;4008 bytes&gt;                                         | Mar 10, 2021 | 0
+ IWbkEc4cCozDnGoJ | url      | https://news.ycombinator.com/user?id=xXx_Zeph420_xXx | Mar 11, 2021 | 0
 </code></pre>
 
 <p>
 Normally, you'd only stamp a claim if you were actually going to verify it. But
 because we're doing a tutorial, let's just pick a claim and <em>pretend</em>
-you've verified it, which is exactly how SSL certificate verification works. We're going
+you've verified it, which is basically what SSL certificate providers do. We're going
 to stamp the <code>identity</code> claim.
 </p>
 
@@ -258,7 +263,7 @@ Would you like your stamp to expire on a certain date? [y/N]: n
 </code></pre>
 
 <p>
-Note the lack of fire gifs 
+Note the lack of fire gifs
 <!--<img class="inline-block" alt="fire" src="https://web.archive.org/web/20091027012523/http://www.geocities.com/vineel_sami/hotfire.gif">-->
 <img class="w-2 h-3 inline-block" alt="fire" src="./assets/fireanim.gif">
 surrounding "extreme." This is a bug and we're working on it. Once done, it
@@ -286,7 +291,7 @@ an email claim, so you can go ahead and send it to <code>zephram@starfleet.org</
 On the receiving end, Zephy might do something like this:
 </p>
 
-<pre class="codeblock"><code>$ ./stamp stamp accept --id b0n ./play/stamp 
+<pre class="codeblock"><code>$ ./stamp stamp accept ./play/stamp
 Stamp d7JpGIOpot5gkbDu accepted!
 </code></pre>
 
@@ -295,6 +300,11 @@ And the stamp is accepted! Zeph thanks you for your trust.
 </p>
 
 <h2 id="architecture">Architecture</h2>
+<p>
+Let's go over some important pieces about how Stamp works.
+</p>
+
+<h3 id="arch-dag">DAG</h3>
 
 <p>
 Each identity is a DAG (Directed Acyclic Graph) of modifications created by the
@@ -388,14 +398,20 @@ identity that can be cryptographically verified.
 <p>
 All private data within an identity (private keys, private claim data) is encrypted
 by a master key generated from a passphrase of your choosing. Even if your full Stamp
-identity is compromised, it is still protected by your master key.
+identity is stolen, it is protected by your master key (so choose a good passphrase).
 </p>
 
 <p>
-Here's what a published identity looks like (granted, this is a test identity, we still
-haven't convinced Zephram to use Stamp yet):
+Each transaction ID is a signature by one of the identity's main keys (alpha,
+policy, or root) on the transaction entry, which holds the transaction's body
+and points back to previous transactions.
 </p>
-<pre class="codeblock max-h-64"><code>---
+
+<p>
+Here's what a published identity looks like:
+</p>
+
+<pre class="codeblock"><code>---
 publish_signature:
   Ed25519: y5mvkfPUWDsTItTGV6ubwT2xke7glmhl1O70ZPggMop0Z9JFp1B9v2SZ2IJ3R3m-7fZZWxWOmbXtwvu2tOzpCQ
 publish_date: "2021-03-11T18:17:29.149006622Z"
@@ -548,7 +564,107 @@ identity:
                 Public: "https://news.ycombinator.com/user?id=xXx_Zeph420_xXx"
 </code></pre>
 
-<h3>Keychain</h3>
+<p>
+When all of these transactions are run in order, they spit out an identity object,
+which looks like this:
+</p>
+
+<pre class="codeblock"><code>---
+id:
+  Ed25519: b0ndAF-2sh3ZyodgXdYicqPv7CmyKBrj7tCNOtqoEVIXZdt6f4a_ORm8kYnEwtld4ndSMQjIez7LOewFJAvXAw
+created: "2021-03-11T02:22:53.217044153Z"
+recovery_policy: ~
+keychain:
+  alpha:
+    Ed25519:
+      - pxxN1bI2n0awjgtlv9XQ1jMe2Ad0gxKaDlUsiQdNZQg
+      - ~
+  policy:
+    Ed25519:
+      - Dw6oppSXugOrw_Loo5I8zcfW5MwohE01hKNaS0VFQDQ
+      - ~
+  publish:
+    Ed25519:
+      - X0zdQd75zutXP5z5AalnQTAgVyNDLbJxjQcdB0D_EGk
+      - ~
+  root:
+    Ed25519:
+      - duTYQNXiotlBhMYDukaLbaXa3gGHpIf3z_RkbLiSEYc
+      - ~
+  subkeys:
+    - key:
+        Sign:
+          Ed25519:
+            - XgFKkRI0WRy1mzMWUw1qvHpPUZwNSVFuKguuVrBKQ9Q
+            - ~
+      name: "default:sign"
+      description: A default key for signing documents or messages.
+      revocation: ~
+    - key:
+        Crypto:
+          Curve25519Xsalsa20Poly1305:
+            - dZzJL-GHTiJYB25b-XqV91reacxE9xHblx1Jyi-VrE8
+            - ~
+      name: "default:crypto"
+      description: A default key for receiving private messages.
+      revocation: ~
+claims:
+  - claim:
+      id:
+        Ed25519: GCEEQIGwOVBKBrGT1LCQTtCCrorknw4UaqqmiZuDPVd-p-mi2Uh-ptw0F41H11HiXknCMWPeR66b1GvT3StHBA
+      spec:
+        Identity:
+          Ed25519: b0ndAF-2sh3ZyodgXdYicqPv7CmyKBrj7tCNOtqoEVIXZdt6f4a_ORm8kYnEwtld4ndSMQjIez7LOewFJAvXAw
+      created: "2021-03-11T02:23:02.904887791Z"
+    stamps: []
+  - claim:
+      id:
+        Ed25519: hElGR6vsTewh7TQvlbJTwkMuIG6xP8LCGl4eeeP5lE0rKoTG9Q60l0PwCBfQ1Nr8dI2mZ3EEQAtjqapjs31bDg
+      spec:
+        Name:
+          Public: Zefram Cochrane
+      created: "2021-03-11T02:23:15.289853416Z"
+    stamps: []
+  - claim:
+      id:
+        Ed25519: alwCMEZN_w3XCkyGUv4hjodGJ-3LxE-0WASu1cd-S6rLgldcNqwk4mcwZz51WAYzkZA8NZTinPyNzf5SDLi9Aw
+      spec:
+        Email:
+          Public: zephram@starfleet.org
+      created: "2021-03-11T02:23:15.293144612Z"
+    stamps: []
+  - claim:
+      id:
+        Ed25519: LprnsHJj42Z9jMOC8pFM1rVwhpHFunbyddjafTZUfLGc2Cbt74Sxwk3jzWHaIIntkKfW5BAOiwcbSBkath0zCw
+      spec:
+        HomeAddress:
+          Private:
+            - HmacSha512: 8dv3WU58cFEsGEoV6_hCefKoplYtHQlZ_lgImOsIuFmt3Y_KSLjO6TZTO_lEWL58toDFvf_I1MTj-MEEsJwzhQ
+            - ~
+      created: "2021-03-11T02:25:34.943430262Z"
+    stamps: []
+  - claim:
+      id:
+        Ed25519: cRR6CeO8yy37B5dG1XLHUkmBJw65PcahMWIgp9pCLDTcgQ-xP2RVmsfT7UKIWjrMssQnEyjpakUcIgHpmuhvBg
+      spec:
+        Photo:
+          Public: _9j_4AAQSkZJRgABAQEASABIAAD_2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN-gXz_2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz_wgARCACZAJkDAREAAhEBAxEB_8QAGQAAAgMBAAAAAAAAAAAAAAAAAgMAAQQF_8QAFwEBAQEBAAAAAAAAAAAAAAAAAAECA__aAAwDAQACEAMQAAABz8qy6kCKsFKQiFAlllC9BqqhRB_Kto1Wg1aFLdXJKkoooql6BVkIQ0c7ZCqlhlhSyIXYVXGSkaQhCEHYtw2w6qqBi4gwOjoIztZdZohCENmUiWssIXTIRDShupsOdNKms1zVkIQhsxYQZqDYNIlqNMtDlfWRAlz0u5shCG3mtZZWlEWSsmnqQ0ZQGdOcym5lQhDbzsSUJbWlqgJSDCM9aIZbzdYzMVUIQ140UhkoGnqIgFdMq0uzeoHLuUXEqEIbMaKSy7q2mSIFVQ-XfQDlSnJ1hVzCEIa8bJkoixsrCQCpSXbaBcVXNvNGoCRLWG3G7mZVwy6FSFxQ-0yKmNIjWMaIspKqzbnbEKRqsM6iqoolMa2IAwBLQKFMlzmOhnQoCvIARVqci7WroWg7nnw-R1pIVlJnjGhrqIudGW3NAUFK-1qKucDMl3roFkTKykYrhRms0rc1agMlfRIihuMSas72DgTnM2LHiDNqOV0tKUWNURlxlFJsmiXQEc2ZlsSCLFgmuqmhlOV1p3I3GaKHS75oBVZ5m1uxYqwQKGtEuuAVo-zKmaCFHSmnLDCzUUq7EWWVQVS7syx1azAZoaIOlNaFSf_EACYQAAIBBAEEAgMBAQAAAAAAAAABAgMQERIhIDAxMhNBIzNCBEP_2gAIAQEAAQUCVsmw-b4NTXpz1oyZM9evaybWwY62sk447Goo9KMGuoqcmlTkPKJ9fCMn2yMHIjzKcVinhikTqZdGpKBFtE6jk5D7O-pKo5OKYpSGJpGNnFSRiriSw5D7P9SaclsaYEkKKFeSFTiift2MZEkhDtsbHyRN2RbyVPbsJWRJjkblLEiUNZ_HmSisS8y9u19MaMEPZx3SWojzL77UbOyRH1nJCdpL8j7OrFwO2RelN4KkN1TbtOnlyg10owYFgb48t9H2Y5tJ20jIqUtbKPDmIVpGdkOyyao9TIqgnlReSQuT44EvWZC3lzZT_WOyEnaZOOpF8wawNYMsfmSI8L6fmb5pv8ZgwIR9VfEuacfK4IPk0RIflH8ytSlrKS1FIyhCJsr_AK8kuCKUjDg88Wxylxnh-LQqZWjsjOFTjsT5_wA78y9KUhPhxNrP2fgm8ivGZsS0z8URRXyT5g_L9Fw4O2R3dkO8fEPaA_Nb1P8AmQv_AP_EABoRAAIDAQEAAAAAAAAAAAAAAAERADBAIGD_2gAIAQMBAT8B9corlFFF0ahUchpGQVGH3QsHBxOPb__EABQRAQAAAAAAAAAAAAAAAAAAAID_2gAIAQIBAT8BSH__xAApEAABAwIFBAICAwAAAAAAAAABABEhAhAgMDFRYRIiQHEyQQOBUtHx_9oACAEBAAY_AvPjxZ8GQycCFomOYdhqmVRoEBFyy4W6MIN8ul-lfFesrlkenRa9xTOW2t2kokvK7QU0ts6-6Su4TvlUnqH9ItuiHg65DmRsjnBAqVCmxz-kri0Wq9-AMB8AKb1eBK5TGxqBU5XOTomtonGmJ04waLZTOAv_AIuVxbTEcht1xYb4Xw-sf46sX3b2E1jtadCuMIp3Q4KKBtuLzYxh6al2rm0pzqi_8rftNaFrlTSCodTU6cFgqjb95wsVSqvdxg__xAAmEAEAAgIBBAEEAwEAAAAAAAABABEhMUEQUWFxgSAwobGRwfDx_9oACAEBAAE_IasWnEHzFX0joJntFcTUvotRi5cuX01qJ3FVGMIM4geelvM3xG-f4TI5ixfquFY2mWecIYOJh6kA4Szhx9gTANyokuLFcbaGKpYqvMQ3Bnca12wr0Lv6gh4QyL6L9XcQGfRy-J7yP-5dI0LLjmS3wLgXZw5gA1DNs0g8Rs8MsWOeOY7Kze1zb6q6VG0ouy7lEURSLuKwV_FAD5y24bVCULed4rMbzSrwTbH3AGD0kexOBeo32b-w10OOI6YUgu2e8tDpEDa5eqAdRcEGoMBEQRitiOoFAGvquX0fmjHSalzLL1EUPpiB-kHa_aKoJZVd8T5_MfqOirslUzSYOnZaIMjuMlnjAA8dpSUqCqEz-0KOITvLdwrMYK17IipqK-ZajMtu7jv7N04i4iHRUrivxQECmIblQQ0_Z1WMNt9FxpFQ7svdk0-moTFAxBzh2mSH8RM_SLShuMupiPnUU0kYEqJLzDAzBlG3QS21jmpU4ONxM5B-IirGLyeirLcIoPxFcTP0io70KLM3BRL7KFuaEFBTFWxqJC3REXbXaVzLkeYr0bQVmKCkK6HKFn9QsCpeHiYLf9hoPe44juXWpZhoZMxlWhWJmMZ7Stf9QzbW-IvwnqgteZfYlQm1_cVIHcRpxLn3cuvXQ5TGPMULMK8RmcTGvxFb3ARfEoAPE8EWqzZPJ_VMw0Bi3bgiLy8I5th-kMZ-f4lHki0TFLDkdfE3uzU2EGHCqeYnL7YHocjwjodmYBdlBrvdw1IYjA2kbOZ2l7HEbyrMElkWCWXuVmHwJqgrt2jekoVz8T_VQwl_mYYajsdpdTD8TIidON-GZHzLKcIHszNak4uUzNId4eyqMxk4wqWYJ81Pc6HicvSzn0cw1Pwpun7Cf4-5-InPxGOfof_aAAwDAQACAAMAAAAQ9-Q77rbigk_TnwZTrEAA20gMSA_AAAGJgTr0IAAAPgSSbvkgAAACZ0SQtFAA6IYE0Yk_AAXe6SfUMrAAnT_FC9FWAALzCQiJBNAAgZ1pEgpZtAivFG8sfvXggadhxhptmKJp_cYIhjDGbxyMkwZfDzvxvXgQ4NSyrFdANef3Vi4IOZTQd6yQ6sL0yGqQvKPUNYrQWgvI_8QAHBEAAwEBAQEBAQAAAAAAAAAAAAERECAwQCEx_9oACAEDAQE_EEJlL8VKX7p8aJ8LELH7Qm8EPylEEFlNaJh-KEIJlJlF50hfh_dRdXgmoNU_m0XDGPl6xeILILRopdeITxatsKMY0QmvYIXK4eNEGiDZcuXlYxsuseUuvE-FrKJ9TXiFtG8Y16ITLlJl_fc2IQ49Qu2LYXSj1C7fouP_xAAaEQACAwEBAAAAAAAAAAAAAAABEQAQIDBA_9oACAECAQE_EMriIPCIKG3ByG1FFBFFRtRdALIiioUeQMFmGOgY8DYgMcceHTggh7OOnBBD1WR3eR5BQ8Qp8HhcHYjp-U2MvChFDAhsaWhsWaMejT0KGhBZ4CO1agEVCjzOxRv_xAAmEAEAAgMAAgICAgMBAQAAAAABABEhMUFRYXGBIKEQkbHB8NHx_9oACAEBAAE_EEQILEo1qWaGJcXn3Cpf1AlxLLqDWB9y7sj6IfKH4wy1UiPuFsQrstRm5g2xxlpaW-YKrTcpiW_EMWq8xG7uFVb9QXRuUYeZ5MPEQ40zwCpYabnueQPlj-o2AInE_mn8UepYvxNUIHKh6Q8trGHJVc5EHz4hFkvEuzjCq8wZUyzZ332PuFryRfyMuDc4VETFZgKwQAuYzJNSvjxFVqHwSmMKDo5AaBt0FXqDghbF9PP7leS_XIsUj9zd-WQrMW0CpiF2JGwsuqi40C0ao39_UZqs4S06YhPVRswsB0MLR1EhrRitAAbUKq_u5fgWVZVZGjLA2xbAL_7Nf3KMaaZ3Z1EJ6QBSPSCvyPllgJyWsTLcFx0FF2uMHkLlIHCAUxnzUUwymEAe2ISy4KmXfMtWBetss5kJ1DP3GUMvHlmOGraIbW7Xydg7D1AYq8bJrJqXGy9ltnz2Ds3-NT9JQIy4ZlQMU0rFKFvct4OSvAICthz1MLY_EGEYcRcZJjObjFhWaQmou_PYCAlX5hNmqmVp5lyj8-IaUCqnNR_EwjYjdzGpAddSsH9wAYKNQMrihs2Zg2NjKu-JrE3i77l0ys6yTL0LwNKlmQ11wxuLcNDhBHUJt-Jlhzcor3EQBRbbFAlAtQIYJRxAKAx5gIOncAcbLHHzHyyxZYkmzmhuABP9IY3VZE23ImP4jCpdmYVkfqKDolfcYldhUKvrPLXyolaMESC4rSQoxxY8YAtV0hLg9RRs1-5aFsin3-UFMDTCrqOyCBDdVVRW1p-5Qt36gOEya3EC17l-HKplbgP-IRVZ6gpp5uAXgu58ozc1_IWymBWY5-4Dgh1WyCghXVRYs5EuoQvsRmEs51Bc2lMOxhbbyeGIKhGgeSixllLZhb1EVdVvIiDA-nEqV8_xYUaxEyDEFNxfEqQS82-ooBFyyjpARzkye55FXd0TIXzMHoomK5CpajsDUpyaCCbN-JSAcYsr5wsG9ZhctKY733M5LGitiVoFVGKr4l5Zsb4TEsLAjbyFZNFV_kxnd3XfENZeUorkulWUdcsAMCLtK-oYjvfqVh38QLPUzRY-oEXyXljEVfMKFc-XqIbkLa5Eos7oNMJVle5Rqn_UK0oNvfUtZtOmmOlDKtZ_1IEgyqFnP_ImIUGEdhhXughUUx7iFKIpb57jUXoaG9vMHpJPyMBkVXmWQ0RqrAhcAUM7jltU6pupgAtqVBIBuvEfJRw9GPYLEPqpyFNZ0NjfGBAs1o6-oCbbfxLANNBBwkrhREAfENHlT6ioCrTB0xS9K2hqtkcJwbBhjDLUOjApFFt4iaxj3G-BG4mouBqL3oC4kCgR-WEvywxfmHO64RFLwe9iK7RRfTVTGFp1P_oxWYnG7zNqsMFm3iDI-Q4S4tezGE8fMG9hNd01LpGxXPYL4M_PcxvKqVD0F-zUIvT7ljDdQ80ZqAQ8A51BWCUh4Kg711RyGOhpIJG3RORUr8BNfMZZboMkx5IrQKtIdjVwUANRBsGr_wA_MuIA401j-4hKBZgXO5tZzyCllFcChfEG9rI5SxpNUlRJYHGKloq81M5CnQDo9PuJ2xUPaxXzE4dOKZl3AlBh0tiBba_cV2ivmfH8AFdYtRRhWh3yV5btzEyN8hJhnCuSmHkqfUtHGH1GKeq9NRBVSacv3BVDM6fqNpiCPB9NQ4KVaxTKVGXoGmqV1Xmo6KyAEtTxaOVqwqI1eRByJBKz5-Zv8iP7Zo_M6-X-DSMbPmftp-hNf-WZ-7_BLr8Ju-SH7p_rHT8fx__Z
+      created: "2021-03-11T02:33:51.454997635Z"
+    stamps: []
+  - claim:
+      id:
+        Ed25519: IWbkEc4cCozDnGoJ5Ckz9mSU9EfNQwOvIDF5Gohk8uAXIZ1Lvq2kL06T1uBXCC7135b2AnJj1lsIORVAmN72AA
+      spec:
+        Url:
+          Public: "https://news.ycombinator.com/user?id=xXx_Zeph420_xXx"
+      created: "2021-03-11T18:04:42.269684928Z"
+    stamps: []
+extra_data:
+  nickname: ~
+  forwards: []
+</code></pre>
+
+<h3 id="arch-keychain">Keychain</h3>
 <p>
 There are four main keys an identity uses for either updating or publishing.
 </p>
@@ -597,7 +713,7 @@ There are four main keys an identity uses for either updating or publishing.
 
 
 		
-		<div class="rounded p-4 mb-4 md:max-w-sm md:mx-auto bg-purple-100">
+		<div class="rounded p-4 mb-4 md:max-w-sm md:mx-auto bg-red-100">
 	<strong class="block text-center">Root</strong>
 	
 			<p>
@@ -618,6 +734,157 @@ list above, or any number of active keys which allow the identity to encrypt or
 sign messages or files.
 </p>
 
+<p>
+Effectively, any key in the keychain can be updated <em>except the alpha key</em>,
+which cannot ever change. If the alpha key is stolen, the identity is forever lost
+and most be revoked entirely.  However, with an effective recovery policy, it is
+possible you would never even need to use the alpha key, so it can be tucked away
+inside a vault somewhere.
+</p>
+
+<h3 id="arch-recovery">Recovery</h3>
+
+<p>
+If we've learned one thing from PGP and cryptocurrencies, it's that key management
+is really, really hard, even for complete nerds. So it follows that an identity
+system that relies on key management should be a) hard to misuse and b) easy to
+recover from misuse.
+Stamp's recovery system attempts to provide a way to make key management accidents
+not so fatal. It allows setting up a set of rules <em>before an accident happens</em>
+that allow you to recover from that accident. How does this work?
+</p>
+
+<p>
+Every Stamp identity has the concept of being <em class="text-green-600">valid</em>.
+If the identity has signatures that don't match certain keys, or parts of the
+identity that stray from the signatures, then the identity is
+<em class="text-red-600">invalid</em> and the implementations won't let you interact
+with it in any way.
+</p>
+
+<p>
+So if your root key is stolen and you need to change it, you can't just slap a new
+root key in there and go to town. You need to create a transaction, signed by your
+alpha key, that replaces the old root key. But if you're following best practices,
+your alpha key is stored separately from your identity and is locked in a safe
+protected by armed guards on a space station in geosynchronous orbit.
+</p>
+
+<p>
+Luckily, you were <em>super smart</em> and created a recovery policy:
+</p>
+
+<pre class="codeblock"><code>---
+Any:
+  - All: 
+      - OfN:
+          must_have: 1
+          pubkeys:                      
+            - Ed25519: hxJNDiXrMu3ahhhl9DDgkipiry1iw-9aoz8FOjhz3K0
+            - Ed25519: el09jpXlNktjrb63_q75zlIJyjFmI30fBA4DI5OBj7o              
+      - OfN:
+          must_have: 1                   
+          pubkeys:                     
+            - Ed25519: g3yYPVK8L4NiuTikdivlDNJ_brdZWA-cEjfNeASQFt0
+            - Ed25519: 4rkAHQYDj5YKfAl_40O8JOLbApByHruaWwWIj1EeSMo
+  - OfN:
+      must_have: 3
+      pubkeys:
+        - Ed25519: 0FwmCwC7G2V2g7L_yJjH_HzUjQM3SDotmRvuFe2eqpk
+        - Ed25519: R8R7t0JZQw80VyZrdk35BLPzlUCHY515zXSrEPJu2Ro
+        - Ed25519: el09jpXlNktjrb63_q75zlIJyjFmI30fBA4DI5OBj7o
+        - Ed25519: hxJNDiXrMu3ahhhl9DDgkipiry1iw-9aoz8FOjhz3K0
+</code></pre>
+
+<p>
+Above, <code>Any</code> is an <code>OR</code>, <code>All</code> is an <code>AND</code>
+and <code>OfN</code> is a specification that of the given public keys, a recovery
+request must have <em>at least <code>N</code></em> signatures to be valid.
+</p>
+
+<p>
+Effectively what we have is a set of conditions requiring some combination of signatures
+from public keys that you specify beforehand. If a set of signatures on a recovery
+request satisfy the policy, the request is marked as <em class="text-green-600">valid</em>
+and its action is executed (the only available action is to replace the policy, publish,
+and root keys all at once). You can create any amount of nested conditions that satisfy
+whatever balance between security and ease of recovery that you desire.
+</p>
+
+<p>
+Recovery policies give you and your community (family, friends, institutions) a
+way to help you recover from otherwise fatal mistakes relating to key management.
+</p>
+
+<h3 id="arch-stampnet">StampNet</h3>
+
+<p>
+Great so you've created a new identity, and it has a bunch of well-thought-out claims
+and you're ready to make or receive stamps or set up a recovery policy. How do you
+find other people's identities?
+</p>
+
+<p>
+StampNet is (going to be) a p2p network for storage of identities. It has three main
+functions.
+</p>
+
+<div class="grid md:grid-cols-3 gap-4">
+	
+	<div class="rounded p-4 mb-4 bg-indigo-100">
+	<strong>Retrieval</strong>
+	
+		<p>
+		Anybody can connect to the network and ask for a publicly-stored identity.
+		Doesn't matter if you're rich, poor, tall, short, skinny, fat, or a brain in a jar.
+		All published identities are always accessible to anyone who can connect.
+		</p>
+	
+</div>
+
+
+
+	
+	<div class="rounded p-4 mb-4 bg-yellow-100">
+	<strong>Syncing</strong>
+	
+		<p>
+		Any user of the Stamp protocol can use StampNet to make sure their private
+		identity is in-sync between their devices. The synced updates to your identity
+		are only available to the devices you approve beforehand.
+		</p>
+	
+</div>
+
+
+
+	
+	<div class="rounded p-4 mb-4 bg-green-100">
+	<strong>Storage</strong>
+	
+		<p>
+		Public storage of your published identity requires StampNet <em>membership</em>,
+		which is granted through the stamps of existing network members. These stamps
+		are limited, and members must choose who they stamp wisely.
+		</p>
+	
+</div>
+
+
+</div>
+
+<p>
+Membership is currently a loosely-defined topic and
+<a href="https://github.com/stamp-protocol/tracker/issues/15">discussion is currently ongoing</a>.
+</p>
+
+<p>
+One of the goals of StampNet is to <strong>avoid blockchain-itis</strong> and act
+as a p2p network in its own right without the need to form some sort of global
+consensus. If it turns out blockchains are beneficial enough that the pros outweigh
+the cons, then so be it, but blockchain should not be used unless absolutely needed.
+</p>
+
 <h2 id="whyyy">Why??</h2>
 
 <p>
@@ -635,6 +902,8 @@ falls flat in another area: the keyservers. They allow anybody to create any
 number of signatures on your identity without your approval. In Stamp, any changes
 to your identity must be <em>approved and signed</em> by you, and a single unified
 p2p network replaces a set of federated keyservers that seem to always be broken.
+Lastly, how many times have you <a href="https://alexcabal.com/creating-the-perfect-gpg-keypair">read this guide?</a>
+Be honest. PGP is <em>complicated</em> to use.
 </p>
 
 <p>
@@ -656,7 +925,7 @@ you that there are people out there who will stop at nothing to get you to eat
 only soy products? Stamp allows you to build your own trust, and does so in a
 way that integrates with institutional identity providers. Google or Facebook
 or your local DMV can always stamp your identity, and anybody who trusts them
-will then have some measure of trust for you! 
+will then have some measure of trust for you!
 </p>
 
 <p>
