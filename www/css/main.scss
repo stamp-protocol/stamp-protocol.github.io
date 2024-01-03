@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+	.st-container {@apply block max-w-4xl mx-auto px-4;}
+	.container-wide {@apply max-w-5xl;}
+	.button-plain {@apply inline-block text-center py-4 px-8;}
+	.button {@apply button-plain bg-primary text-white sm:bg-primary/[0.80] sm:hover:bg-primary sm:transition-colors;}
+}
+
+header, .main-content {
+	a:not(.custom) {@apply text-link;}
+	a:not(.custom):hover {@apply underline;}
+	a:not(.custom):visited {@apply text-linkvisited;}
+}
+
+.logo {
+	svg {@apply w-full;}
+	#g21753, #text21224-5 {
+		path {@apply fill-highlight;}
+	}
+	#text111 {
+		path {@apply fill-slate-700;}
+	}
+}
+
+body {@apply font-sans;}
+post, page {
+	& {@apply block text-lg;}
+	h1, h2, h3, h4 {
+		& {@apply text-slate-700;}
+		&, .date {}
+	}
+	h1 {@apply text-5xl mb-8;}
+	h2 {@apply text-4xl mb-7;}
+	h3 {@apply text-2xl mb-6;}
+	h4 {@apply text-xl mb-5;}
+	p, ul, ol {
+		& {@apply mb-4;}
+		& + h1 {@apply mt-12;}
+		& + h2 {@apply mt-8;}
+		& + h3 {@apply mt-6;}
+		& + h4 {@apply mt-4;}
+	}
+	img + p {@apply mt-4;}
+	p:last-child {@apply mb-0;}
+	ul, ol {
+		ul, ol {@apply mb-0;}
+	}
+	ul {@apply list-disc ml-8;}
+	ol {@apply list-decimal ml-8;}
+	code {@apply p-1 whitespace-nowrap text-red-900 bg-slate-100 text-base p-1;}
+	pre {
+		& {@apply mb-4 border p-2 whitespace-pre bg-slate-100 overflow-auto max-h-80;}
+		code {@apply p-0 whitespace-pre text-red-900 bg-inherit;}
+	}
+	hr {@apply mb-4;}
+}
+

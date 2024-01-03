@@ -1,21 +1,41 @@
-.PHONY: all build watch clean
+.PHONY: all publish clean watch
 
-export SHELL := /bin/bash
+# non-versioned include
+-include vars.mk
 
-DEST ?= public
-DRAFTS ?= --drafts
+SRC := www
+BUILD := dist
+MKDIR = mkdir -p ${dir $@}
 
-all: build
+allwww := $(shell find $(SRC) -type f)
+allsrc := main.js $(shell find plugins/)
 
-build:
-	bundle exec jekyll build $(DRAFTS) -d $(DEST) --config _config.yml,_config.local.yml
+all: $(BUILD)/assets/zefram.stamp $(BUILD)/index.html
 
-watch:
-	bundle exec jekyll build $(DRAFTS) -d $(DEST) --config _config.yml,_config.local.yml --watch
+$(BUILD)/assets/zefram.stamp: $(SRC)/assets/zefram.stamp
+	@$(MKDIR)
+	cp $^ $@
 
-deploy: DRAFTS :=
-deploy: all
+$(BUILD)/index.html: $(allsrc) $(allwww) tailwind.config.js postcss.config.js
+	@echo "url is $(URL)"
+	SRC=$(SRC) DEST=$(BUILD) URL=$(URL) node main
+	npx postcss $(BUILD)/css/**/*.css --base $(BUILD)/ --dir $(BUILD)/
 
 clean:
-	rm -rf $(DEST)
+	rm -rf $(BUILD)
+
+watch:
+	while true; do inotifywait -qr -e close_write *.js www/ plugins/; make; done
+
+publish: override URL := ''
+publish:
+	@echo "Remember to commit your changes to master for publishing to work!"
+	@sleep 5
+	git checkout publish
+	git merge master
+	make clean all
+	git add .
+	git commit -m "build"
+	git push
+	git checkout -
 

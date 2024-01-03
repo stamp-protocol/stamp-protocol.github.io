@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<title>{% if title %}{{ title | escape }}{% else %}{{ site.title | escape }}{% endif %}</title>
+		<meta name="description" content="{% if excerpt %}{{ excerpt | striptags | replace("\n", "") | truncate(160) }}{% else %}{{ site.description }}{% endif %}">
+
+		<link rel="stylesheet" href="{{ site.url }}{{ "/css/main.css" }}?v={{ site.asset_version }}">
+		<link rel="canonical" href="{{ site.url }}/{{ permalink | replace('index.html', '') }}">
+		<link rel="icon" href="{{ site.url }}/assets/images/logo-v3-sq.svg" type="image/svg+xml">
+		{% if og_image %}
+			<meta property="og:image" content="{{ site.url }}{{ og_image }}" />
+		{% elseif leader.image_raw %}
+			<meta property="og:image" content="{{ leader.image_raw }}" />
+		{% elseif leader.image %}
+			<meta property="og:image" content="{{ site.url }}{{ leader.image }}" />
+		{% else %}
+			<meta property="og:image" content="{{ site.url }}/assets/images/logo-v3.svg" />
+		{% endif %}
+
+		<!-- Matomo -->
+		<script type="text/javascript">
+			var _paq = _paq || [];
+			/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+			_paq.push(['trackPageView']);
+			_paq.push(['enableLinkTracking']);
+			(function() {
+				var u="//killtheradiostats.nfshost.com/";
+				_paq.push(['setTrackerUrl', u+'piwik.php']);
+				_paq.push(['setSiteId', '16']);
+				var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+				g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+			})();
+		</script>
+		<!-- End Matomo Code -->
+	</head>
+
+	<body class="bg-white text-ink {{ body_class }}">
+		<header class="pt-4 pb-6">
+			<div class="st-container text-center">
+				<div class="logo inline-block w-48" role="img" aria-label="Stamp logo">
+					<a href="{{ site.url }}">{% include 'assets/images/logo-v3.svg' %}</a>
+				</div>
+				<h2 class="font-mono text-primary text-xl">{{ site.description }}</h2>
+			</div>
+			<div class="st-container text-center pt-2">
+				<ul class="m-0 p-0 list-none flex justify-center">
+					<li class="px-3"><a href="{{ site.url }}">Home</a></li>
+					<li class="px-3"><a href="{{ site.url }}/tutorial">Tutorial</a></li>
+					<li class="px-3"><a href="{{ site.url }}/architecture">Architecture</a></li>
+					<li class="px-3"><a href="{{ site.url }}/why">Why</a></li>
+				</ul>
+			</div>
+		</header>
+		<div class="main-content">
+			{% block content %}{% endblock %}
+		</div>
+	</body>
+</html>
+

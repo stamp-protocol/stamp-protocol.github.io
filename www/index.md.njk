@@ -1,0 +1,47 @@
+---
+layout: page.njk
+title: 'Stamp: A cryptographic identity system'
+og_image: '/assets/images/logo-v3.svg'
+---
+
+{% from 'includes/components/transaction.njk' import main as transaction %}
+
+Identity management in distributed systems is difficult and often completely ignored.
+The standard is to use keypairs for identity management but those are generally locked
+to a particular device and have no mechanism for recovery if lost or compromised.
+
+Stamp is an [open-source protocol][github]
+for personal or group identity management with a focus on ease of use in p2p or
+decentralized systems. It syncs your identity between your devices securely and
+allows publishing your identity to StampNet, a p2p network for identity discovery
+and verification *(coming soon!).*
+
+<div class="grid md:grid-cols-3 gap-4 pb-4">
+	<div class="rounded p-4 mb-4 bg-indigo-100">
+		<strong>Claims</strong>
+		<p>
+			Make claims and verify the claims of others, creating a
+			web of trust. Some claims, such as domain or URL ownership can be verified
+			instantly.
+		</p>
+	</div>
+	<div class="rounded p-4 mb-4 bg-yellow-100">
+		<strong>Keychain</strong>
+		<p>
+			Manage keys not just for general encryption or signing, but for
+			other cryptographic applications. Stamp is like a password manager, but
+			for keys.
+		</p>
+	</div>
+	<div class="rounded p-4 mb-4 bg-green-100">
+		<strong>Policies</strong>
+		<p>
+			Create policies for managing group identities, letting others act on your
+			behalf, or recovering your identity in the case of a lost or compromised key.
+		</p>
+	</div>
+</div>
+
+
+[github]: https://github.com/stamp-protocol
+

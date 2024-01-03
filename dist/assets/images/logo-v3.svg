@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="76.115318mm"
+   height="16mm"
+   viewBox="-10 -6 76.115318 16"
+   version="1.1"
+   id="svg5"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs2">
+    <rect
+       x="330.05472"
+       y="28.710562"
+       width="67.450562"
+       height="131.12459"
+       id="rect21226" />
+    <rect
+       x="177.22861"
+       y="285.95877"
+       width="265.82693"
+       height="126.36395"
+       id="rect113" />
+  </defs>
+  <g
+     id="layer1"
+     transform="translate(-75.723786,-143.52469)">
+    <g
+       aria-label="STAMP"
+       transform="matrix(0.26458333,0,0,0.26458333,22.345742,52.788204)"
+       id="text111"
+       style="font-size:96px;line-height:1.25;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect113);display:inline">
+      <path
+         d="m 217.54852,365.46579 q 0,2.784 -2.016,4.8 -1.92,1.92 -4.704,1.92 h -26.88 v -6.72 h 25.92 v -13.44 h -19.2 q -2.784,0 -4.8,-1.92 -1.92,-2.016 -1.92,-4.8 v -13.44 q 0,-2.784 1.92,-4.704 2.016,-2.016 4.8,-2.016 h 26.88 v 6.72 h -25.92 v 13.44 h 19.2 q 2.784,0 4.704,2.016 2.016,1.92 2.016,4.704 z"
+         style="font-family:Iceland;-inkscape-font-specification:Iceland"
+         id="path853" />
+      <path
+         d="m 260.26849,331.86579 h -13.92 v 40.32 h -7.68 v -40.32 h -13.92 v -6.72 h 35.52 z"
+         style="font-family:Iceland;-inkscape-font-specification:Iceland"
+         id="path855" />
+      <path
+         d="m 309.70841,372.18579 h -7.68 v -13.44 h -24.96 v 13.44 h -7.68 v -40.32 q 0,-2.784 1.92,-4.704 2.016,-2.016 4.8,-2.016 h 33.6 z m -7.68,-20.16 v -20.16 h -24.96 v 25.92 l 5.76,-5.76 z"
+         style="font-family:Iceland;-inkscape-font-specification:Iceland"
+         id="path857" />
+      <path
+         d="m 374.02845,372.08979 h -7.68 v -35.328 l 2.88,-4.8 h -4.32 l -11.808,26.784 h -5.568 l -11.424,-26.784 h -4.32 l 2.88,4.8 v 35.328 h -7.68 v -46.944 h 13.728 l 9.504,22.464 h 0.96 l 9.504,-22.464 h 13.344 z"
+         style="font-family:Iceland;-inkscape-font-specification:Iceland"
+         id="path859" />
+      <path
+         d="m 431.62846,352.02579 q 0,2.688 -2.016,4.704 -2.016,2.016 -4.704,2.016 h -25.92 v 13.44 h -7.68 v -33.6 l 6.72,-6.72 h -6.72 v -6.72 h 33.6 q 2.688,0 4.704,2.016 2.016,2.016 2.016,4.704 z m -7.68,0 v -20.16 h -24.96 v 25.92 l 5.76,-5.76 z"
+         style="font-family:Iceland;-inkscape-font-specification:Iceland"
+         id="path861" />
+    </g>
+  </g>
+  <g
+     aria-label="i"
+     transform="matrix(0,0.26458333,0.26458333,0,41.75929,-73.969693)"
+     id="text21224-5"
+     style="font-size:80px;line-height:1.25;font-family:Iceland;-inkscape-font-specification:Iceland;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect21226)">
+    <path
+       d="m 328.80024,92.050196 -3.814,-0.112809 V 67.937385 l 3.814,-5.487191 z"
+       id="path21234-3" />
+    <path
+       d="m 328.80024,92.050196 -3.814,-0.112809 V 67.937385 l 3.814,-5.487191 z"
+       id="path21234"
+       style="font-size:80px;line-height:1.25;font-family:Iceland;-inkscape-font-specification:Iceland;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect21226);opacity:1"
+       transform="matrix(0,1,1,0,236.76503,-236.74596)" />
+  </g>
+  <g
+     id="g21753"
+     transform="matrix(0,-0.26458333,-0.26458333,0,-58.505123,59.914912)"
+     style="font-size:80px;line-height:1.25;font-family:Iceland;-inkscape-font-specification:Iceland;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect21226)">
+    <path
+       d="m 264.23035,-183.33054 -3.814,-0.11281 v -24 l 3.814,-5.48719 z"
+       id="path21745" />
+    <path
+       d="m 264.24534,-183.32645 -0.11281,-3.814 h -24.00001 l -5.48719,3.814 z"
+       id="path21747"
+       style="font-size:80px;line-height:1.25;font-family:Iceland;-inkscape-font-specification:Iceland;letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect21226);opacity:1" />
+  </g>
+</svg>

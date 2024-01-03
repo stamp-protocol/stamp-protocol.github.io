@@ -1,11 +1,23 @@
 module.exports = {
-	purge: [
-		'**/*.html',
-		'**/*.js',
+	content: [
+		'dist/**/*.html',
 	],
-	darkMode: false, // or 'media' or 'class'
+	//purge: [
+	//	'**/*.html',
+	//	'**/*.js',
+	//],
 	theme: {
-		extend: {},
+		extend: {
+			colors: {
+				'ink': '#111',
+				'primary': '#157C9E',
+				'highlight': '#6a803c',
+				'link': '#c22',
+				'linkvisited': '#8a1717',
+			},
+			fontFamily: {
+			},
+		},
 	},
 	variants: {
 		extend: {},
