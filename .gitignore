@@ -1,9 +1,4 @@
-_site
-/public
+/dist
 .sass-cache
-.jekyll-cache
-.jekyll-metadata
-vendor
 node_modules
 /play
-/docs
