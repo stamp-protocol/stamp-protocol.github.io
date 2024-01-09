@@ -24,7 +24,7 @@ $(BUILD)/index.html: $(allsrc) $(allwww) tailwind.config.js postcss.config.js
 clean:
 	rm -rf $(BUILD)
 
-watch:
+watch: all
 	while true; do inotifywait -qr -e close_write *.js www/ plugins/; make; done
 
 publish: override URL := ''

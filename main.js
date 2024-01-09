@@ -75,12 +75,16 @@ Metalsmith(__dirname)
 		pattern: ['posts/**/*.md', 'posts/**/*.md.njk'],
 	}))
 	.use(collections({
+		docs: {
+			pattern: ['docs/**/*.njk'],
+            sortBy: (a, b) => a.sort - b.sort,
+		},
 		posts: {
 			pattern: ['posts/**/*.md', 'posts/**/*.md.njk'],
 			sortBy: function(a, b) {
 				return new Date(b.date) - new Date(a.date);
 			},
-		}
+		},
 	}))
 
 	// -------------------------------------------------------------------------

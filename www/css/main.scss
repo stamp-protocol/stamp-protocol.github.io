@@ -29,11 +29,11 @@ body {@apply font-sans;}
 post, page {
 	& {@apply block text-lg;}
 	h1, h2, h3, h4 {
-		& {@apply text-slate-700;}
+		& {@apply font-serif text-slate-700;}
 		&, .date {}
 	}
 	h1 {@apply text-5xl mb-8;}
-	h2 {@apply text-3xl mb-7;}
+	h2 {@apply text-4xl mb-7;}
 	h3 {@apply text-2xl mb-6;}
 	h4 {@apply text-xl mb-5;}
 	p, ul, ol {
@@ -56,5 +56,20 @@ post, page {
 		code {@apply p-0 whitespace-pre text-red-900 bg-inherit;}
 	}
 	hr {@apply mb-4;}
+	em {@apply text-yellow-700;}
+
+	table {
+		& {@apply mb-4;}
+		thead th {@apply text-left;}
+		tbody td {vertical-align: top;}
+		tbody td {@apply first:pr-4 py-2 border-b;}
+		tbody tr:last-child td {@apply border-0;}
+	}
+}
+
+.toc {
+	ul {@apply p-0 m-0 list-none;}
+	ul ul {@apply pl-5;}
+	a {@apply block px-8;}
 }
 
