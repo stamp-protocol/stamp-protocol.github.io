@@ -10,8 +10,8 @@ module.exports = {
 		extend: {
 			colors: {
 				'ink': '#111',
-				'primary': '#157C9E',
-				'highlight': '#6a803c',
+				'primary': '#6a803c',
+                'secondary': '#dfe',
 				'link': '#c22',
 				'linkvisited': '#8a1717',
 			},

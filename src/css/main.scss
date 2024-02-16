@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @layer components {
-	.st-container {@apply block max-w-4xl mx-auto px-4;}
+	.st-container {@apply block max-w-5xl mx-auto px-4;}
 	.container-wide {@apply max-w-5xl;}
 	.button-plain {@apply inline-block text-center py-4 px-8;}
 	.button {@apply button-plain bg-primary text-white sm:bg-primary/[0.80] sm:hover:bg-primary sm:transition-colors;}
@@ -18,7 +18,7 @@ header, .main-content {
 .logo {
 	svg {@apply w-full;}
 	#g21753, #text21224-5 {
-		path {@apply fill-highlight;}
+		path {@apply fill-primary;}
 	}
 	#text111 {
 		path {@apply fill-slate-700;}
@@ -33,9 +33,9 @@ post, page {
 		&, .date {}
 	}
 	h1 {@apply text-5xl mb-8;}
-	h2 {@apply text-4xl mb-7;}
-	h3 {@apply text-2xl mb-6;}
-	h4 {@apply text-xl mb-5;}
+	h2 {@apply text-4xl mb-5;}
+	h3 {@apply text-2xl mb-4;}
+	h4 {@apply text-xl mb-3;}
 	p, ul, ol {
 		& {@apply mb-4;}
 		& + h1 {@apply mt-12;}
@@ -52,13 +52,20 @@ post, page {
 	ol {@apply list-decimal ml-8;}
 	code {@apply p-1 whitespace-nowrap text-red-900 bg-slate-100 text-base p-1;}
 	pre {
-		& {@apply mb-4 border p-2 whitespace-pre bg-slate-100 overflow-auto max-h-80;}
+		& {@apply mb-4 border p-2 whitespace-pre bg-slate-100 overflow-auto max-h-96;}
 		code {@apply p-0 whitespace-pre text-red-900 bg-inherit;}
 	}
 	hr {@apply mb-4;}
-	em {@apply text-yellow-700;}
+	em {@apply text-green-900;}
 
-	table {
+	blockquote {@apply rounded p-4 mb-4 bg-indigo-100;}
+
+	details {@apply bg-slate-100 px-4 mb-4;}
+	details {
+		summary {@apply text-primary cursor-pointer py-4;}
+	}
+
+	table:not(.transaction) {
 		& {@apply mb-4;}
 		thead th {@apply text-left;}
 		tbody td {vertical-align: top;}

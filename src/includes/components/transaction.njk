@@ -1,6 +1,6 @@
 {% macro main(txid, prev, body, classes) %}
 <div class="p-4 mb-4 bg-gray-100">
-	<table cellspacing="0" cellpadding="0" class="max-w-full">
+	<table cellspacing="0" cellpadding="0" class="max-w-full transaction">
 		<tbody>
 			<tr>
 				<td class="font-bold">TXID:</td>
@@ -9,7 +9,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="font-bold">Last&nbsp;TX(s):</td>
+				<td class="font-bold">Prev&nbsp;TX(s):</td>
 				<td class="pl-2">
 					<code>{{ prev }}</code>
 				</td>

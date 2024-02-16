@@ -1,0 +1,822 @@
+---
+layout: page.njk
+title: 'Documentation'
+generate_toc: true
+---
+
+{% from 'includes/components/transaction.njk' import main as transaction %}
+
+<div class="toc md:float-right py-4 ml-4 mb-4 bg-gray-100">{:toc}</div>
+
+## Core concepts
+
+Let's go over the different pieces that make up the Stamp protocol and how they
+fit together. First off, we'll look at identities: what it is and the pieces that
+make an identity in Stamp.
+
+### Identity
+
+Your identity in Stamp is a collection of claims you make
+about yourself, "stamps" (signatures) from other identities on your claims that create
+a network of trust, keys that allow you update your identity or
+interact with other cryptographic applications, and a set of policies that defines how
+the identity can be updated and who can act on behalf of the identity.
+
+These components work together to ensure that changes to the identity are valid, networks
+of trust can form between identities, and other cryptographic systems can interact with
+your identity seamlessly.
+
+Each identity has a unique, public identifier that can be used to distinguish it from other
+identities. For example, mine is `s0f__TtNxiUrNJ8yi14vVQteecP7xQYQzcohhPqOdt8A`. This
+identifier is the best way to find the identity or share it with others.
+
+<div class="grid md:grid-cols-3 gap-4 py-4">
+	<div class="rounded p-4 mb-4 bg-indigo-100">
+		<strong>Claims and stamps</strong>
+		<p>
+			Make claims (name, email, etc) and verify the claims of others, creating a
+			network of trust. Some claims, such as domain or URL ownership can be verified
+			instantly with no third party.
+		</p>
+	</div>
+	<div class="rounded p-4 mb-4 bg-yellow-100">
+		<strong>Keychain</strong>
+		<p>
+			Manage keys not just for communication between identities or creating signatures,
+            but for other cryptographic systems. Stamp is like a password manager
+			for apps that use cryptography.
+		</p>
+	</div>
+	<div class="rounded p-4 mb-4 bg-green-100">
+		<strong>Policies</strong>
+		<p>
+			Create policies that allow recovering your identity in the case of a lost or
+            compromised key, or to give combinations of people the ability to act on behalf
+            of an identity.
+		</p>
+	</div>
+</div>
+
+<details>
+    <summary>
+        Here's an example of how an identity in Stamp is represented.
+    </summary>
+
+```yaml
+---
+id:
+  Blake3: s0f__TtNxiUrNJ8yi14vVQteecP7xQYQzcohhPqOdt8
+created: "2024-01-04T07:28:19.196Z"
+policies:
+  - id:
+      Blake3: aQG6RZf2DIwEKxxSRJCWL5np-rYVEZ_wv_R1JUikHlk
+    policy:
+      capabilities:
+        - Permissive
+      multisig_policy:
+        MOfN:
+          must_have: 1
+          participants:
+            - Key:
+                name: ~
+                key:
+                  Ed25519: oOY0cJKeJsKPuwG7TEcxbavf2UyjbSj5IWkewVQmArk
+keychain:
+  admin_keys:
+    - key:
+        Ed25519:
+          public: oOY0cJKeJsKPuwG7TEcxbavf2UyjbSj5IWkewVQmArk
+          secret: ~
+      name: alpha
+      description: Your main admin key
+      revocation: ~
+  subkeys:
+    - key:
+        Sign:
+          Ed25519:
+            public: v5oIeVI6Lw1zYSehiu8XJEtbifR7aZa9UwpHoG8GCGQ
+            secret: ~
+      name: default/sign
+      description: A default key for signing documents or messages.
+      revocation: ~
+    - key:
+        Crypto:
+          Curve25519XChaCha20Poly1305:
+            public: 1Ay8UcSP6rukhIpU-1qR1KtpltuRme7Ttb9FV9OZFgE
+            secret: ~
+      name: default/crypto
+      description: A default key for receiving private messages.
+      revocation: ~
+    - key:
+        Secret:
+          hmac:
+            Blake3: hkxJkPUFnU1EclSON4rW6UjMk90brI0eM5Nt2tDBPug
+          data: ~
+      name: default/secret
+      description: A default key allowing encryption/decryption of personal data.
+      revocation: ~
+claims:
+  - id:
+      Blake3: M-iSJUeI0bPsLUixZib8qjXx1RJjcYNJIEHzD5B8fxQ
+    spec:
+      Identity:
+        Public:
+          Blake3: s0f__TtNxiUrNJ8yi14vVQteecP7xQYQzcohhPqOdt8
+    stamps: []
+    name: ~
+  - id:
+      Blake3: UP6azISO1hLHROH6pIU6OeVGwowR82jrfK2rhV1k2AQ
+    spec:
+      Name:
+        Public: Andrew Lyon
+    stamps: []
+    name: ~
+  - id:
+      Blake3: oZr-4N9V8SS1sHlccx76tZcKAvSi6eGYItbNlBQL_HU
+    spec:
+      Email:
+        Public: andrew@killtheradio.net
+    stamps: []
+    name: ~
+  - id:
+      Blake3: eJdi26q-d_tO3jAE1Km93LPhSzZ7KE-_YnLoL-VlTYk
+    spec:
+      Pgp:
+        Public: dedf113e54248344163716b55c66fad13222d757
+    stamps: []
+    name: ~
+  - id:
+      Blake3: MhoIfakOmWFOdS7DjYwTqDEtge80Lx1a813qiszRp6A
+    spec:
+      Photo:
+        Public: _9j_4AAQSkZJRgABAQEASABIAAD_2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P_2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P_wgARCABkAGQDAREAAhEBAxEB_8QAGgAAAgMBAQAAAAAAAAAAAAAAAwQAAQIFBv_EABcBAQEBAQAAAAAAAAAAAAAAAAABAgP_2gAMAwEAAhADEAAAAW2aXUJakMjeaWQKw1XOsX1O9i6VLU5e8iWoPL3eYS0bt428jO_gKuR0xhalysjr5HzdLk4nTIz0OKlrKO8yac59B0K5ckczoaBrlblHocFbUNSKzja-s0OyO5qdynYrbZ3craRbxckzpfWSDMMyCTn6ypq3HXkYlUaw1JbKNXDcUL2cvUldLOaGVDOo4JKOzWsNZuAdnJ1JXQmbtGM46zNFYvvEHMuV0yXNDUG0Eoa6XPZc6U3hPWaNDMDBVRaVaSTcuVGmahZCGimqZ2hFCmVhZCyiyGlzcs5oKGQiaWiELIaP_8QAJRAAAgIBAwMFAQEAAAAAAAAAAQIAAxEQEjEEEyEgIiMwQTIz_9oACAEBAAEFAsGYgWM-HFnsHUrAwK-NmgjnAjwcXWTJ1qtNbZzXp-PoDL7NsOuJiUN8Oh4fXqv9IOYcQiUHxHfaO4GVuZ4ly74yESvkxuBx0y4X8sM3j0bcxvEQYhGYViLEHvMIzHwRoMzdH8PqZT_elqja3M3GdzMq8tYMONGPjpjpuEtPxnmE4CZSqm7bY_luIzYhf2UW7S9i7Zu-PQtUbLLC7fqcGPqDid2vB7ZmPQomZ3GhJP0gQ_WIeD9f_8QAHhEAAQUAAgMAAAAAAAAAAAAAAQAQESAwAiESMVD_2gAIAQMBAT8BpN_VDoTry1IlHjC4saGoRQDQgjYMDn2wwL9sEGJXlkGOk_D_AP_EAB4RAAIDAAEFAAAAAAAAAAAAAAEgABARMAISMUFQ_9oACAECAQE_AbyZO1vKBDwAMX6aKFxNhQ0JiiGthPMbCYxsKbAmQi_bGhyZ8P8A_8QAJRAAAQMDAwQDAQAAAAAAAAAAAQAQEQIgITAxUTJBYXESIjNQ_9oACAEBAAY_AmyujK-VRHpdKkAFTFwWUaRZ4U2BoUC6Dqmnh6o4sps2WEeW2kKrtpYc82-DaXJfZvsEbKm3s61VXHpTUp5erlQdijlofaAp7aH5LEg6Gf4X_8QAIxABAAICAgICAgMAAAAAAAAAAQARITEQQVFhcZGBoSAwsf_aAAgBAQABPyG4uWuqzNkZ8tTzMyALizf6hAR5mWDfHXARDbBmnhAJ8JeI-me6PHkT2SlSqeCahfpBmhajakV54TMt4i6uOkNYhDUWXxFk-ITcw9EjCpqUVGNs8Dcu7kEIlnryFfD5Rkb3Mrsl5obncCIainzAQu0ahyrkwVMiOeA3D8hHdHXqV89w48cwS7J1mYSkQ4ChGGo0dy9BiHVlMeo8BcwMTPbqMNTCmYKUI96og1QW-papa6uUE8zKVREMIo_hFwz0PuCuns_2Zv54uyrf3GIquyypVbKjx9G4YcC1FwQPcsPnPEqQckZX33O-BSofBudMaB6h2lasU9o74d3Q-mG4V-Y9L9KNJUxGdrGumop3NqvmuKlur5ti6i_xeTfG8wx_qnH_2gAMAwEAAgADAAAAEKCBZ_R41LPG-AGrktelalUw2ngfnCDkf2xguSjywWJt9IytZ-TknemGjFsZYKCA-7fO442aZubkOSSaRtxbTN__xAAdEQEBAAIDAQEBAAAAAAAAAAABABARICExQTBR_9oACAEDAQE_EMBLpib5a0kwS4HH21FqtxBawYDBkd7gg3BonUkYXVvcZ6ASQdzgeQYVvJPTuZ7arW5otMJfYxteSDr5MTeT7lPsYUewrJjsjD5fc-IwaPtrqHd4gtEphl6jm9lvj0Z1k7t_y2l3yM-3nX5DN4fk4__EAB0RAAMBAQEBAQEBAAAAAAAAAAABERAxISAwUUH_2gAIAQIBAT8QuUVLp_BQ1NRBevhCYxKPEf6LGWEspVnerot4xvCiomd3EqRp_DyiVnIhE9HxKV8MQeicEIFeq6xnVvDp4Wt6LIsNb0XdQT0WRfw8ongxlBKU4JO411vsEpnfyZ7_AE9-W4QkSn42C_ROv9P_xAAkEAEAAgICAQQDAQEAAAAAAAABABEhMUFRYRCBkbFxoeHB0f_aAAgBAQABPxAqhR2srmICCVwcxjotBtg7Z7DYMudXMmFstP8AUrxC2lzIo6YIaq4FqXwTUoXMMWI4Rxdb3CxJQ3kK3cStFaVdthM2G4yaKo_J3AkRkK16CyiGbxExW8ZSRsEbYviOl5TIkdqKzgOJVtRRYa4xueX8QFnxFSt0N_EEFaSv86JT4y1QBGagqbwaisgsLbiVKDxEAouE3iQ7S0v2Yayw2lLrEKCbZz-JkDQVDUBii8QCUEiuao3CWx4IU04I7FylxXtyyolSkEy0FE8ViK6qqsd3E6SmfEDLKwPabHuFBGcExiK6djT-SMBfIWTMbZQDMo0ibUVKk5leyCgPMZmw47iSm_iYrXoDNLdsqBRKuOXLv-HiYZ6l4GBvAVfoR3MKwXHMvTm5WlxtNgF-9QBnDAVDIm8GJYynFmHOiLppOjcPXzSChKUG40DmYBF5fMARaKysKT60qEeQfCOz5Q1Ol8byDnBZ-4YYwXCl5a-JQ5om7q5XagPr_ITJzOLuUwAj0bv6lqQSym3nxEoaoU3eJiUwDPyV7xbT36b1lAn6R7rCfRpUuAbI3Yz1MDKCqq-WVXWonUBgBsLGFyKZzr2OIKPOjf2uWtj5JacsTIh-CMrSmqn87ELVeZVRHqHslAztGoSTp49DMdi6hgjRiXsWoSrggxFXWYZbnMylKYbI9whGES-iZIbnETEeCVhhr0k__9kK
+    stamps: []
+    name: ~
+  - id:
+      Blake3: l52FmcwRThnBlybPb33MFDH2qgdQyza6XS72oDFO5D4
+    spec:
+      Birthday:
+        Private:
+          hmac:
+            Blake3: OcYj5TARKhqRvq3oCa0tfMhk2JZoDyAivHyQMIApuAE
+          data: ~
+    stamps: []
+    name: ~
+  - id:
+      Blake3: zYY3Z_P_MappC5sdHumcZ7goXMAlHuNQ9uCG9NEi02I
+    spec:
+      Domain:
+        Public: killtheradio.net
+    stamps: []
+    name: ~
+  - id:
+      Blake3: gsIXBbspigIQ-34m2TCxxRA_1V-fiefRa60WfXbR408
+    spec:
+      Url:
+        Public: "https://killtheradio.net/"
+    stamps: []
+    name: ~
+  - id:
+      Blake3: PVeQpdRHHI2rxOHDoyMyWo0oguyji0u5t9weobrGyyk
+    spec:
+      Domain:
+        Public: turtlapp.com
+    stamps: []
+    name: ~
+  - id:
+      Blake3: mXvBpZWeb4I1fDJVotXKqOJbxiFQ9_GyQLr1cvbUE1M
+    spec:
+      Url:
+        Public: "https://news.ycombinator.com/user?id=orthecreedence"
+    stamps: []
+    name: ~
+stamps: []
+```
+</details>
+
+Let's go over more about these pieces in detail.
+
+### Claims
+
+Your identity contains pieces of information about you that others can verify. These are
+known as "claims" and form a basic building block of your identity. This can be something
+as simple as "I own this identity" or "My name is \_\_\_\_" to "I am the member of the
+group that owns the identity \_\_\_\_."
+
+<a id="private-claims"></a>
+By default, claim values are public and viewable for all to see but **claims can also be
+private and encrypted** and completely hidden from all published forms of your identity.
+You might want your name or email to be public, but a home address might be best to keep
+private. Stamps on private claims are viewable by anyone who has a copy of your identity,
+but the claim value is never shared.
+
+<details>
+    <summary>
+        There are several different claim types.
+    </summary>
+
+Claim | Description
+--- | ---
+`Identity` | Allows claiming ownership of an identity. Generally, __all__ Stamp identities will have this as their first claim as a way to say "I own this identity." It also provides a method for others to verify the identity belongs to you without having to individually [stamp][stamps] each of the other claims.
+`Name` | Your name.
+`Birthday` | The date you were born. Happy birthday! Or if you are a faceless megacorp, the date you filed your articles of incorporation! Wooooo!
+`Email` | Claim that you own an email address.
+`Photo` | Allows uploading a *small* photo of you. 8K or less.
+`PGP` | If you've got a PGP identity, you can put the long-form identifier here to claim ownership of it through your Stamp identity.
+`Domain` | Here you can put in a (DNS) domain name you have control over. This is a self-verifying claim in that it doesn't require stamps: it can be verified on the spot through the Stamp claim checker.
+`URL` | Claim that you own a particular URL. This can be a personal website, a profile on a social media page, etc. Like the `Domain` claim, this can be verified directly through Stamp.
+`Address` | Claims that you reside at a physical address.
+`Relation` | Claims a relationship to another Stamp identity. This generally means membership of a particular group represented by Stamp. Relationship claims also have an extension type, allowing you to claim any kind of relationship, such as claiming someone is your grandson. The possibilities are literally infinite.
+`RelationExtension` | Like a `Relation` claim, but the subject does not have to be a Stamp identity: it can be anything that can be serialized into binary. This allows claiming relationships with entities outside of the Stamp protocol.
+`Extension` | The extension claim basically allows you to make any claim you want. If any of the above claim types don't cover your use-case, you can use this claim type to extend Stamp to accommodate you. Extension claims have two parts: a key (binary) that is always publicly-readable and a value that can be public or private.
+
+</details>
+
+> It's important to note: any identity can claim anything. You don't know if someone's name
+> is really what they say it is, or if they are *truly* a member of the Bass Pro Shops Insider
+> Deals Club. This is why every claim on an identity can be verified by other identities and must
+> be considered carefully by you. These verifications are known as [stamps].
+
+Claims can be named, which opens up interesting opportunities: other systems can use
+those names to find claims that point to locations you own. I know that last sentence made
+absolutely no sense, but stick with me. Imagine a protocol (like [ActivityPub] for instance)
+that allows others to follow the updates you create. The immediate problem is that if you have
+to change the location at which your ActivityPub instance is hosted, you lose all your followers. Now imagine you
+had a Stamp identity with a `url` claim that was named `activitypub/primary`. Users of
+ActivityPub could then follow your Stamp url (`stamp://V-oZfxWJMrOqYSCN/claims/name/activitypub/primary`
+for example) and if you changed hosts you could create a new claim with the name
+`activitypub/primary` and your followers would automatically be updated. Obviously this would
+require buy-in from the folks at ActivityPub, but it's an example of how named claims can be
+useful as pointers in the distributed/decentralized landscape.
+
+### Stamps
+
+A "stamp" is a verification by one identity that a claim on another identity has some validity.
+Stamps not only allow you to show trust in others but also allow flows of trust through the
+Stamp network. For instance, if Alice stamps Bob's identity claim, and Bob stamps Zoey's, then
+Alice can place some trust in Zoey's identity even if they don't actually know each other because
+Bob has created a link between them.
+
+When an identity wants to stamp another's claim, the stamp is generally stored with the identity that
+created the stamp. This allows quick verification that the stamp is still active (ie, not revoked)
+and also enables flows of trust more easily.
+
+The recipient must formally accept the stamp before it is added to their identity. In effect, a
+stamp requires both parties to agree that a stamp should exist.
+
+Stamps on [private claims][private-claims] are achieved by the stampee creating a request, in
+which the claim value is decrypted, then immediately encrypted with one of the stamper's public
+keys such that only the stamper can decrypt and read the value. This allows the stamper (and only
+the stamper) to view and verify the claim. Stamps added to private claims are public even if the
+claim's value is encrypted and private.
+
+### Policy system
+
+A policy is a way of assigning one or more [capabilities] (the ability to either update an identity
+or act on behalf of an identity) to specific keys (known as [admin keys][admin-keys]). No capabilities are
+assigned by default so policies additively grant permissions to one or more admin keys.
+Policies allow arbitrary combinations of admin keys to be specified, creating a robust
+multi-signature system. This opens the door for logic like:
+
+```yaml
+---
+# ANY of the following conditions can match
+Any:
+  # ALL of the listed conditions must match
+  - All:
+      - OfN:
+          must_have: 1
+          pubkeys:
+            - Ed25519: hxJNDiXrMu3ahhhl9DDgkipiry1iw-9aoz8FOjhz3K0
+            - Ed25519: el09jpXlNktjrb63_q75zlIJyjFmI30fBA4DI5OBj7o
+      - OfN:
+          must_have: 1
+          pubkeys:
+            - Ed25519: g3yYPVK8L4NiuTikdivlDNJ_brdZWA-cEjfNeASQFt0
+            - Ed25519: 4rkAHQYDj5YKfAl_40O8JOLbApByHruaWwWIj1EeSMo
+  # of the four possible keys, we must have signatures from at least 3 of them
+  - OfN:
+      must_have: 3
+      pubkeys:
+        - Ed25519: 0FwmCwC7G2V2g7L_yJjH_HzUjQM3SDotmRvuFe2eqpk
+        - Ed25519: R8R7t0JZQw80VyZrdk35BLPzlUCHY515zXSrEPJu2Ro
+        - Ed25519: el09jpXlNktjrb63_q75zlIJyjFmI30fBA4DI5OBj7o
+        - Ed25519: hxJNDiXrMu3ahhhl9DDgkipiry1iw-9aoz8FOjhz3K0
+```
+
+Policies can assign capabilities to admin keys that *are in other identities*. This allows one
+identity to be managed in a cryptographically verifiable way by multiple other identities. In effect,
+this is a group identity.
+
+> Because things like issuing signatures or creating transactions for outside systems are all modeled
+> as Stamp transactions, it becomes possible to use a group Stamp identity as a conduit for democratic
+> participation in other systems.
+
+#### Admin keys
+
+An admin key is a *cryptographic signing key* that lives in the identity's keychain which can be granted
+[capabilities] (the ability to modify or act on behalf of the identity) with the use of policies.
+Admin keys sign [transactions], and if a transaction has the correct combination of signatures
+as defined by a policy, it becomes "valid" and can be verified by other identities.
+
+[Read more about transactions.][transactions] *Or else.*
+
+Admin keys have a mandatory `name` field and optional `description` field, allowing to distinguish
+between them more easily than having you memorize a bunch of base64 public key values.
+
+#### Capabilities and contexts
+
+Capabilities are granted to various admin keys through the policy system. A capability can grant a
+permission in all cases, or be restricted to *certain contexts.* For instance, a capability might grant
+the ability to manage any keychain key or it could grant the ability to manage only keychain keys
+matching a name glob pattern (like `apps/turtl/*`).
+
+<details>
+    <summary>
+        An overview of types of capabilities.
+    </summary>
+
+Capability | Description
+--- | ---
+`Permissive` | Allows any action. Can be used to give one or more admin keys "god mode."
+`Transaction` | Allows creating [transactions] of certain types in a certain [context][contexts].
+`Extension` | Enables implementing custom capabilities in systems outside of Stamp. Any kind of capability can be modeled using the `Extension` type, but this forces the implementing logic into the application. In most cases, using an `Ext` [transaction][transactions] is the way to go.
+
+</details>
+
+<a id="contexts"></a>
+Contexts are ways to limit the scope of a capability. When assigning a capability via a policy, contexts
+can be specified individually or as combinations of and/or/not logic.
+
+<details>
+    <summary>
+        More about the various types of contexts.
+    </summary>
+
+Context | Description
+--- | ---
+`All` | Holds a list of contexts. Creates a logical `AND` gate where *all contexts inside of it must match.*
+`Any` | Holds a list of contexts. Creates a logical `OR` gate where  *any contexts inside of it can match.*
+`Not` | Creates a logical `NOT` gate where *the contained context must not match.*
+`Permissive` | Signifies that context is not important. This context always matches.
+`IdentityID` | Matches on a specific identity ID.
+`ObjectID` | Matches on an object ID. This can be a policy ID, claim ID, or stamp ID.
+`AdminKeyID` | Matches on a specific [admin key][admin-keys] ID.
+`KeyID` | Matches on a specific [keychain] key ID.
+`Name` | Matches on resources that have the given name. Named resources are [admin keys][admin-keys], [claims], and [keychain] keys.
+`NameGlob` | Matches on resources that have names matching the glob pattern. For instance `email/*` would match a claim with the name `email/primary`.
+`ClaimType` | Matches on claim transactions that have the given claim type.
+`ExtType` | Matches on `Ext` [transactions] that have the given type.
+`ExtTypePrefix` | Matches on `Ext` [transactions] that have a type field starting with the given binary value.
+`ExtContext` | Matches on `Ext` [transactions] that have a matching key/value pair in their `context` field.
+`ExtContextPrefix` | Matches on `Ext` [transactions] that have a matching key in their `context` field where that value starts with the given value.
+
+</details>
+
+#### Recovery
+
+We've seen the policy system allows multi-signature management of an identity. This in itself might seem
+fairly esoteric, but it has one advantage to the regular, down-home individual Stamp user: recovery.
+
+The policy system makes it possible to designate any arbitrary combination of keys from other identities
+that can *reset your admin keys and policies entirely.* If your admin keys are lost or compromised,
+you don't have to start over and build an entirely new identity from scratch: you can issue a recovery with
+a little help from your friends.
+
+How you set this up is up to you: maybe you want your grandson to be able to reset your identity. Maybe
+your sister, and one of your two parents. Maybe four of six friends and an institutional identity
+provider. The only limitation is your imagination, and which people you trust.
+
+### Keychain
+
+The keychain is a place to hold non-[admin][admin-keys] keys. This enables some of the more basic functions
+of Stamp identities. For instance, you can store an asymmetric key that allows others to send you encrypted
+email. Or you can store a signing key for creating signatures on files/documents/etc that others can
+verify. You can also store secret keys that you use for personal encryption/privacy.
+
+The keychain also acts as a store for third-party application cryptographic keys as well. Got an app that
+does client-side cryptography? It can store the key in Stamp and not worry about the best way to keep that
+secret.
+
+Entries in the keychain have a mandatory `name` field and an optional `description`, allowing them to
+be distinguished from each other. The `name` is useful as a way for third-party applications to request
+keys specific to them, and also to allow other Stamp users to know which key to use for what. For instance
+you might have a key specifically for emails named `email/default`.
+
+The keychain also stores revoked keys, allowing old messages or signatures to be read/verified while
+discouraging using those keys going forward.
+
+## Architecture
+
+Let's go over some important pieces about how Stamp works.
+
+### Transactions
+
+At the core of Stamp is the concept of transactions. A transaction is signed message that can either
+*modify the identity* (create a new claim, revoke a stamp, etc) or *act on the behalf of the identity*
+such as when creating a signature or issuing a message for use in an external system.
+
+Every change to the identity is issued as a transaction, and each transaction has a unique identifier
+and a collection of one or more cryptographic signatures on it that satisfy some [policy][policies].
+
+> Now, I know what you're thinking. "Oh, 'transactions'...that means *blockchain*. The dreaded
+> blockchain. Stamp is going to issue tokens and NFTs leave me penniless while the founders sail around the
+> Caymans in a 200ft yacht."
+>
+> Don't worry, I already own a 200ft yacht. Also, Stamp's core protocol doesn't use blockchains or tokens and
+> is an entirely local system. Even the [networked portions of stamp][stampnet] are not planned to use any
+> blockchains. 
+
+Transactions have the following structure:
+
+```
+Transaction {
+    // The unique ID of the transaction. This is the cryptographic hash of the transaction's `entry` field
+    id: TransactionID,
+    // An object describing critical data about the transaction
+    entry: TransactionEntry {
+        // when the transaction was created
+        created: Timestamp,
+        // The unique IDs of the transactions that came before this transaction
+        previous_transactions: TransactionID[]
+        // The transaction's body
+        body: TransactionBody,
+    },
+    // A collection of signatures this transaction has received
+    signatures: Signature[],
+}
+```
+
+<details>
+    <summary>Transactions come in many shapes and sizes.</summary>
+
+Transaction | Description
+--- | ---
+`CreateIdentity` | Creates a new identity with a set of [admin keys][admin-keys] and [policies].
+`ResetIdentity` | Replaces the [admin keys][admin-keys] and [policies] of an existing identity.
+`AddAdminKey` | Adds a new [admin key][admin-keys].
+`EditAdminKey` | Edits an existing [admin key's][admin-keys] name and/or description.
+`RevokeAdminKey` | Revokes an [admin key][admin-keys].
+`AddPolicy` | Adds a new [policy][policies].
+`DeletePolicy` | Removes a [policy][policies].
+`MakeClaim` | Creates a new [claim][claims] on the identity.
+`EditClaim` | Edits a [claim's][claims] name or description. Claim *values* cannot be changed and require creating a new claim (and getting new [stamps]).
+`DeleteClaim` | Removes a claim from the identity.
+`MakeStamp` | [Stamp][stamps] another identity's claim. Or you can stamp your own claims, but that's just sad.
+`RevokeStamp` | Revoke a [stamp][stamps] you've made on another identity's claim. Revocations allow others to see that you no longer assign trust to that claim.
+`AcceptStamp` | Accept a [stamp][stamps] another identity has made on one of your claims. This incorporates the stamp into your identity and allows others to see that trust has been assigned to you.
+`DeleteStamp` | Remove a [stamp][stamps] that you've previously accepted. For instance, if Stalin stamped your identity and later you found out he was actually not that nice, you could remove the stamp so other people don't think you associate with guys like Stalin.
+`AddSubkey` | Add a new [keychain] key. This can be a secret key (for symmetric cryptography), an asymmetric crypto key (so people can securely send you private messages), or a signing key so you can create cryptographically-verifiable signatures on documents or files.
+`EditSubkey` | Edit a [keychain] key's name/description.
+`RevokeSubkey` | Mark a [keychain] key as revoked. This does not remove the key entirely, but keeps it from being used in the future.
+`DeleteSubkey` | Remove a [keychain] key entirely from your identity.
+`Publish` | This transaction allows publishing your identity in a cryptographically-verifiable format, making sure it cannot be tampered with. It effectively takes a snapshot of your identity and signs it (the same way other transactions are signed). This lets you send your identity out into the world without fear of being "misrepresented."
+`Sign` | This allows creating an identity-based signature on some data. This is distinct from just creating a signature using a signing key in your [keychain] because it is much more "official." `Sign` transactions require approval of the policy system to create signatures, meaning signatures from group-managed identities must be signed by the correct [admin keys][admin-keys].
+`Ext` | Allows creating Stamp-signed, non-Stamp transactions for use in other systems. *This is my favorite transaction type.* Any external protocol or system that *understands Stamp* can model arbitrary messages/transactions in their system. This allows other systems to use Stamp's properties as an identity system without Stamp having to be able to model some transaction system generic enough to work for every application. In other words, this allows protocols that require some notion of identity to communicate freely *without having to build their own identity system*.
+
+</details>
+
+Transactions have the concept of public data and private data. The public data is there for
+all to see, but private data (cryptographic keys, private claim data) is encrypted
+by a master key generated from a passphrase of your choosing. This way, even if your full Stamp
+identity is stolen, it is protected by your master key (so choose a good passphrase). When you publish
+your identity, the private data is stripped out entirely, retaining only public keys and HMACs of private
+data. The protocol is designed with privacy from the ground up.
+
+### DAG
+
+We've covered [transactions], but one part of them we kind of glossed over: the `previous_transactions` field.
+What is this?
+
+Each identity is a DAG (Directed Acyclic Graph) of transactions created by the
+identity's owner(s). Each transaction, except for the first, references the transaction(s)
+directly before it. This creates a chain of modifications that, when applied in order, build
+a full identity.
+
+<div class="grid md:grid-cols-3 gap-4">
+	{{ transaction('0a4b41', '[]', 'CreateIdentity', 'text-red-600') }}
+	{{ transaction('f8bb77', '[<span class="text-red-600">0a4b41</span>]', 'MakeClaim', 'text-green-700') }}
+	{{ transaction('9221d1', '[<span class="text-green-700">f8bb77</span>]', 'AddSubkey', 'text-blue-600') }}
+</div>
+
+So an identity isn't one singular object, but rather a collection of transactions that 
+grow over time, changing and morphing the identity as they go. This allows an identity, and all
+the modifications to it, to be ordered and cryptographically verifiable. No part of the identity can change
+without complete verification. Modeling things this way also enables being able to change our
+[admin keys][admin-keys] over time without the identity ID changing: you can practice key rotation
+without having to rebuild your entire identity.
+
+<details>
+<summary>
+    Here's what a published identity looks like...note the transaction list.
+</summary>
+
+```yaml
+---
+id:
+  Blake3: _nUXxQBXfjh_Ej9xZgArq-BJf9acczMcQHSAWRV7kH4
+entry:
+  created: "2024-01-11T05:27:35.305Z"
+  previous_transactions: []
+  body:
+    PublishV1:
+      transactions:
+        transactions:
+          - id:
+              Blake3: Zef-ZpmdW1CsA-zxqUzHTP2sKZwUqnfV3oQ7Di2gL3A
+            entry:
+              created: "2024-01-04T07:40:51.669Z"
+              previous_transactions: []
+              body:
+                CreateIdentityV1:
+                  admin_keys:
+                    - key:
+                        Ed25519:
+                          public: wcyZMSHhXOpE2oyTgdvx6LFQK8UOc92poq99mjC7Li8
+                          secret: ~
+                      name: alpha
+                      description: Your main admin key
+                      revocation: ~
+                  policies:
+                    - capabilities:
+                        - Permissive
+                      multisig_policy:
+                        MOfN:
+                          must_have: 1
+                          participants:
+                            - Key:
+                                name: ~
+                                key:
+                                  Ed25519: wcyZMSHhXOpE2oyTgdvx6LFQK8UOc92poq99mjC7Li8
+            signatures:
+              - Key:
+                  key:
+                    Ed25519: wcyZMSHhXOpE2oyTgdvx6LFQK8UOc92poq99mjC7Li8
+                  signature:
+                    Ed25519: KSye_UHFzy7bE0lekc5L9w6dvjnujUgJ2mqkVZNFJRtp0X46fqZvn5k-1M3KskIJGderUENr3KpKA4BcSKtWBw
+          - id:
+              Blake3: Dr4qJ88VNLMraCqXBGoNO8ILbtizognoTwOvR3o7OtY
+            entry:
+              created: "2024-01-04T07:41:11.901Z"
+              previous_transactions:
+                - Blake3: Zef-ZpmdW1CsA-zxqUzHTP2sKZwUqnfV3oQ7Di2gL3A
+              body:
+                MakeClaimV1:
+                  spec:
+                    Identity:
+                      Public:
+                        Blake3: Zef-ZpmdW1CsA-zxqUzHTP2sKZwUqnfV3oQ7Di2gL3A
+                  name: ~
+            signatures:
+              - Key:
+                  key:
+                    Ed25519: wcyZMSHhXOpE2oyTgdvx6LFQK8UOc92poq99mjC7Li8
+                  signature:
+                    Ed25519: SqXlNUmqx-Hr9LMTX4eAZ1ic9UFf3d_AUzvf25Gxd1ZeKNHZnUFSYnxofLdDpclA8k0SHjl83UEQ7d34FzIwBA
+          - id:
+              Blake3: yMRZQTTIsPdmCuhaJvwzCFXDsnljQk1y32VcgNn4b8o
+            entry:
+              created: "2024-01-04T07:41:11.901Z"
+              previous_transactions:
+                - Blake3: Dr4qJ88VNLMraCqXBGoNO8ILbtizognoTwOvR3o7OtY
+              body:
+                MakeClaimV1:
+                  spec:
+                    Name:
+                      Public: Zefram Cochrane
+                  name: ~
+            signatures:
+              - Key:
+                  key:
+                    Ed25519: wcyZMSHhXOpE2oyTgdvx6LFQK8UOc92poq99mjC7Li8
+                  signature:
+                    Ed25519: r8ymcgyRovieDWZodLJPULiabfmiN7QZ5ZwabJoTa9mYePLxa2obF_7jrkmJln9Ltmnb1_CxgrT6MmaoLPm5AQ
+          - id:
+              Blake3: 13_BWJcu_HrKFQV0mSogjHpm3i-4HQGDf-6vhnarH5Y
+            entry:
+              created: "2024-01-04T07:41:11.901Z"
+              previous_transactions:
+                - Blake3: yMRZQTTIsPdmCuhaJvwzCFXDsnljQk1y32VcgNn4b8o
+              body:
+                MakeClaimV1:
+                  spec:
+                    Email:
+                      Public: zef@starfleet.org
+                  name: ~
+            signatures:
+              - Key:
+                  key:
+                    Ed25519: wcyZMSHhXOpE2oyTgdvx6LFQK8UOc92poq99mjC7Li8
+                  signature:
+                    Ed25519: YrhHLHG53oMc-wzQkABDTADFu18Dh_mMBEH5n6EUi4OnV5SQy6wrAxI2H7bqoBG49lnEdqc_Uvqxh9VHplr7Aw
+          - id:
+              Blake3: eG-ezU5d-LVjmVbIHy_CPDMIipkVozIAC2ym5glnUGo
+            entry:
+              created: "2024-01-04T07:41:11.902Z"
+              previous_transactions:
+                - Blake3: 13_BWJcu_HrKFQV0mSogjHpm3i-4HQGDf-6vhnarH5Y
+              body:
+                AddSubkeyV1:
+                  key:
+                    Sign:
+                      Ed25519:
+                        public: LD9pzUz2mHpY1fr-wn03fHA-sqVo-vFcYm9nal5gSyE
+                        secret: ~
+                  name: default/sign
+                  desc: A default key for signing documents or messages.
+            signatures:
+              - Key:
+                  key:
+                    Ed25519: wcyZMSHhXOpE2oyTgdvx6LFQK8UOc92poq99mjC7Li8
+                  signature:
+                    Ed25519: XOBkXzQafXblmbkiE_roxgXH0o3EFGrMBblW9vvAE6R_-qhEELDYskTmyTHWJ2U9F89SClNRX90vvciEgkHwAg
+          - id:
+              Blake3: MBngTWWon600NOBzZI2hVNetglpVJjfT5Ls807GyfqE
+            entry:
+              created: "2024-01-04T07:41:11.903Z"
+              previous_transactions:
+                - Blake3: eG-ezU5d-LVjmVbIHy_CPDMIipkVozIAC2ym5glnUGo
+              body:
+                AddSubkeyV1:
+                  key:
+                    Crypto:
+                      Curve25519XChaCha20Poly1305:
+                        public: LtIC_cnuUprmT9C-YtHZmken25vf-_OaqiCAHFWRJ1E
+                        secret: ~
+                  name: default/crypto
+                  desc: A default key for receiving private messages.
+            signatures:
+              - Key:
+                  key:
+                    Ed25519: wcyZMSHhXOpE2oyTgdvx6LFQK8UOc92poq99mjC7Li8
+                  signature:
+                    Ed25519: 7X6qGeqA3YS_v9RoHDFOussKrHmy_dkfaDweVmoC9xv8CSNrLO4kXcdyeNX-ty65OgpQqng6UrxTGMyk6dqSCQ
+          - id:
+              Blake3: OG5wLtZuJ72SKujlp8YbOw3aQUyVTexYlKjv6L2KqVk
+            entry:
+              created: "2024-01-04T07:41:11.904Z"
+              previous_transactions:
+                - Blake3: MBngTWWon600NOBzZI2hVNetglpVJjfT5Ls807GyfqE
+              body:
+                AddSubkeyV1:
+                  key:
+                    Secret:
+                      hmac:
+                        Blake3: fTbD8ptHwCa-9_iXAIHyroTM8mBLq1w91Fm5LLmf2Yg
+                      data: ~
+                  name: default/secret
+                  desc: A default key allowing encryption/decryption of personal data.
+            signatures:
+              - Key:
+                  key:
+                    Ed25519: wcyZMSHhXOpE2oyTgdvx6LFQK8UOc92poq99mjC7Li8
+                  signature:
+                    Ed25519: 83Sak68ltmxqzfdt3mpwAkbxDeUThzMQ6QtNyUi_l8d95FkgeAlvZO5clCJ91hEsV8uoeXLrSRYXXU5-LYzmBg
+          - id:
+              Blake3: j98fNieA0pRXwKS6xBMkJYOWOuvOCBKzkOVyzG-2vXA
+            entry:
+              created: "2024-01-04T07:43:14.192Z"
+              previous_transactions:
+                - Blake3: OG5wLtZuJ72SKujlp8YbOw3aQUyVTexYlKjv6L2KqVk
+              body:
+                MakeClaimV1:
+                  spec:
+                    Photo:
+                      Public: _9j_4AAQSkZJRgABAQEASABIAAD_2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN-gXz_2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz_wgARCACZAJkDAREAAhEBAxEB_8QAGQAAAgMBAAAAAAAAAAAAAAAAAgMAAQQF_8QAFwEBAQEBAAAAAAAAAAAAAAAAAAECA__aAAwDAQACEAMQAAABz8qy6kCKsFKQiFAlllC9BqqhRB_Kto1Wg1aFLdXJKkoooql6BVkIQ0c7ZCqlhlhSyIXYVXGSkaQhCEHYtw2w6qqBi4gwOjoIztZdZohCENmUiWssIXTIRDShupsOdNKms1zVkIQhsxYQZqDYNIlqNMtDlfWRAlz0u5shCG3mtZZWlEWSsmnqQ0ZQGdOcym5lQhDbzsSUJbWlqgJSDCM9aIZbzdYzMVUIQ140UhkoGnqIgFdMq0uzeoHLuUXEqEIbMaKSy7q2mSIFVQ-XfQDlSnJ1hVzCEIa8bJkoixsrCQCpSXbaBcVXNvNGoCRLWG3G7mZVwy6FSFxQ-0yKmNIjWMaIspKqzbnbEKRqsM6iqoolMa2IAwBLQKFMlzmOhnQoCvIARVqci7WroWg7nnw-R1pIVlJnjGhrqIudGW3NAUFK-1qKucDMl3roFkTKykYrhRms0rc1agMlfRIihuMSas72DgTnM2LHiDNqOV0tKUWNURlxlFJsmiXQEc2ZlsSCLFgmuqmhlOV1p3I3GaKHS75oBVZ5m1uxYqwQKGtEuuAVo-zKmaCFHSmnLDCzUUq7EWWVQVS7syx1azAZoaIOlNaFSf_EACYQAAIBBAEEAgMBAQAAAAAAAAABAgMQERIhIDAxMhNBIzNCBEP_2gAIAQEAAQUCVsmw-b4NTXpz1oyZM9evaybWwY62sk447Goo9KMGuoqcmlTkPKJ9fCMn2yMHIjzKcVinhikTqZdGpKBFtE6jk5D7O-pKo5OKYpSGJpGNnFSRiriSw5D7P9SaclsaYEkKKFeSFTiift2MZEkhDtsbHyRN2RbyVPbsJWRJjkblLEiUNZ_HmSisS8y9u19MaMEPZx3SWojzL77UbOyRH1nJCdpL8j7OrFwO2RelN4KkN1TbtOnlyg10owYFgb48t9H2Y5tJ20jIqUtbKPDmIVpGdkOyyao9TIqgnlReSQuT44EvWZC3lzZT_WOyEnaZOOpF8wawNYMsfmSI8L6fmb5pv8ZgwIR9VfEuacfK4IPk0RIflH8ytSlrKS1FIyhCJsr_AK8kuCKUjDg88Wxylxnh-LQqZWjsjOFTjsT5_wA78y9KUhPhxNrP2fgm8ivGZsS0z8URRXyT5g_L9Fw4O2R3dkO8fEPaA_Nb1P8AmQv_AP_EABoRAAIDAQEAAAAAAAAAAAAAAAERADBAIGD_2gAIAQMBAT8B9corlFFF0ahUchpGQVGH3QsHBxOPb__EABQRAQAAAAAAAAAAAAAAAAAAAID_2gAIAQIBAT8BSH__xAApEAABAwIFBAICAwAAAAAAAAABABEhAhAgMDFRYRIiQHEyQQOBUtHx_9oACAEBAAY_AvPjxZ8GQycCFomOYdhqmVRoEBFyy4W6MIN8ul-lfFesrlkenRa9xTOW2t2kokvK7QU0ts6-6Su4TvlUnqH9ItuiHg65DmRsjnBAqVCmxz-kri0Wq9-AMB8AKb1eBK5TGxqBU5XOTomtonGmJ04waLZTOAv_AIuVxbTEcht1xYb4Xw-sf46sX3b2E1jtadCuMIp3Q4KKBtuLzYxh6al2rm0pzqi_8rftNaFrlTSCodTU6cFgqjb95wsVSqvdxg__xAAmEAEAAgIBBAEEAwEAAAAAAAABABEhMUEQUWFxgSAwobGRwfDx_9oACAEBAAE_IasWnEHzFX0joJntFcTUvotRi5cuX01qJ3FVGMIM4geelvM3xG-f4TI5ixfquFY2mWecIYOJh6kA4Szhx9gTANyokuLFcbaGKpYqvMQ3Bnca12wr0Lv6gh4QyL6L9XcQGfRy-J7yP-5dI0LLjmS3wLgXZw5gA1DNs0g8Rs8MsWOeOY7Kze1zb6q6VG0ouy7lEURSLuKwV_FAD5y24bVCULed4rMbzSrwTbH3AGD0kexOBeo32b-w10OOI6YUgu2e8tDpEDa5eqAdRcEGoMBEQRitiOoFAGvquX0fmjHSalzLL1EUPpiB-kHa_aKoJZVd8T5_MfqOirslUzSYOnZaIMjuMlnjAA8dpSUqCqEz-0KOITvLdwrMYK17IipqK-ZajMtu7jv7N04i4iHRUrivxQECmIblQQ0_Z1WMNt9FxpFQ7svdk0-moTFAxBzh2mSH8RM_SLShuMupiPnUU0kYEqJLzDAzBlG3QS21jmpU4ONxM5B-IirGLyeirLcIoPxFcTP0io70KLM3BRL7KFuaEFBTFWxqJC3REXbXaVzLkeYr0bQVmKCkK6HKFn9QsCpeHiYLf9hoPe44juXWpZhoZMxlWhWJmMZ7Stf9QzbW-IvwnqgteZfYlQm1_cVIHcRpxLn3cuvXQ5TGPMULMK8RmcTGvxFb3ARfEoAPE8EWqzZPJ_VMw0Bi3bgiLy8I5th-kMZ-f4lHki0TFLDkdfE3uzU2EGHCqeYnL7YHocjwjodmYBdlBrvdw1IYjA2kbOZ2l7HEbyrMElkWCWXuVmHwJqgrt2jekoVz8T_VQwl_mYYajsdpdTD8TIidON-GZHzLKcIHszNak4uUzNId4eyqMxk4wqWYJ81Pc6HicvSzn0cw1Pwpun7Cf4-5-InPxGOfof_aAAwDAQACAAMAAAAQ9-Q77rbigk_TnwZTrEAA20gMSA_AAAGJgTr0IAAAPgSSbvkgAAACZ0SQtFAA6IYE0Yk_AAXe6SfUMrAAnT_FC9FWAALzCQiJBNAAgZ1pEgpZtAivFG8sfvXggadhxhptmKJp_cYIhjDGbxyMkwZfDzvxvXgQ4NSyrFdANef3Vi4IOZTQd6yQ6sL0yGqQvKPUNYrQWgvI_8QAHBEAAwEBAQEBAQAAAAAAAAAAAAERECAwQCEx_9oACAEDAQE_EEJlL8VKX7p8aJ8LELH7Qm8EPylEEFlNaJh-KEIJlJlF50hfh_dRdXgmoNU_m0XDGPl6xeILILRopdeITxatsKMY0QmvYIXK4eNEGiDZcuXlYxsuseUuvE-FrKJ9TXiFtG8Y16ITLlJl_fc2IQ49Qu2LYXSj1C7fouP_xAAaEQACAwEBAAAAAAAAAAAAAAABEQAQIDBA_9oACAECAQE_EMriIPCIKG3ByG1FFBFFRtRdALIiioUeQMFmGOgY8DYgMcceHTggh7OOnBBD1WR3eR5BQ8Qp8HhcHYjp-U2MvChFDAhsaWhsWaMejT0KGhBZ4CO1agEVCjzOxRv_xAAmEAEAAgMAAgICAgMBAQAAAAABABEhMUFRYXGBIKEQkbHB8NHx_9oACAEBAAE_EEQILEo1qWaGJcXn3Cpf1AlxLLqDWB9y7sj6IfKH4wy1UiPuFsQrstRm5g2xxlpaW-YKrTcpiW_EMWq8xG7uFVb9QXRuUYeZ5MPEQ40zwCpYabnueQPlj-o2AInE_mn8UepYvxNUIHKh6Q8trGHJVc5EHz4hFkvEuzjCq8wZUyzZ332PuFryRfyMuDc4VETFZgKwQAuYzJNSvjxFVqHwSmMKDo5AaBt0FXqDghbF9PP7leS_XIsUj9zd-WQrMW0CpiF2JGwsuqi40C0ao39_UZqs4S06YhPVRswsB0MLR1EhrRitAAbUKq_u5fgWVZVZGjLA2xbAL_7Nf3KMaaZ3Z1EJ6QBSPSCvyPllgJyWsTLcFx0FF2uMHkLlIHCAUxnzUUwymEAe2ISy4KmXfMtWBetss5kJ1DP3GUMvHlmOGraIbW7Xydg7D1AYq8bJrJqXGy9ltnz2Ds3-NT9JQIy4ZlQMU0rFKFvct4OSvAICthz1MLY_EGEYcRcZJjObjFhWaQmou_PYCAlX5hNmqmVp5lyj8-IaUCqnNR_EwjYjdzGpAddSsH9wAYKNQMrihs2Zg2NjKu-JrE3i77l0ys6yTL0LwNKlmQ11wxuLcNDhBHUJt-Jlhzcor3EQBRbbFAlAtQIYJRxAKAx5gIOncAcbLHHzHyyxZYkmzmhuABP9IY3VZE23ImP4jCpdmYVkfqKDolfcYldhUKvrPLXyolaMESC4rSQoxxY8YAtV0hLg9RRs1-5aFsin3-UFMDTCrqOyCBDdVVRW1p-5Qt36gOEya3EC17l-HKplbgP-IRVZ6gpp5uAXgu58ozc1_IWymBWY5-4Dgh1WyCghXVRYs5EuoQvsRmEs51Bc2lMOxhbbyeGIKhGgeSixllLZhb1EVdVvIiDA-nEqV8_xYUaxEyDEFNxfEqQS82-ooBFyyjpARzkye55FXd0TIXzMHoomK5CpajsDUpyaCCbN-JSAcYsr5wsG9ZhctKY733M5LGitiVoFVGKr4l5Zsb4TEsLAjbyFZNFV_kxnd3XfENZeUorkulWUdcsAMCLtK-oYjvfqVh38QLPUzRY-oEXyXljEVfMKFc-XqIbkLa5Eos7oNMJVle5Rqn_UK0oNvfUtZtOmmOlDKtZ_1IEgyqFnP_ImIUGEdhhXughUUx7iFKIpb57jUXoaG9vMHpJPyMBkVXmWQ0RqrAhcAUM7jltU6pupgAtqVBIBuvEfJRw9GPYLEPqpyFNZ0NjfGBAs1o6-oCbbfxLANNBBwkrhREAfENHlT6ioCrTB0xS9K2hqtkcJwbBhjDLUOjApFFt4iaxj3G-BG4mouBqL3oC4kCgR-WEvywxfmHO64RFLwe9iK7RRfTVTGFp1P_oxWYnG7zNqsMFm3iDI-Q4S4tezGE8fMG9hNd01LpGxXPYL4M_PcxvKqVD0F-zUIvT7ljDdQ80ZqAQ8A51BWCUh4Kg711RyGOhpIJG3RORUr8BNfMZZboMkx5IrQKtIdjVwUANRBsGr_wA_MuIA401j-4hKBZgXO5tZzyCllFcChfEG9rI5SxpNUlRJYHGKloq81M5CnQDo9PuJ2xUPaxXzE4dOKZl3AlBh0tiBba_cV2ivmfH8AFdYtRRhWh3yV5btzEyN8hJhnCuSmHkqfUtHGH1GKeq9NRBVSacv3BVDM6fqNpiCPB9NQ4KVaxTKVGXoGmqV1Xmo6KyAEtTxaOVqwqI1eRByJBKz5-Zv8iP7Zo_M6-X-DSMbPmftp-hNf-WZ-7_BLr8Ju-SH7p_rHT8fx__Z
+                  name: ~
+            signatures:
+              - Key:
+                  key:
+                    Ed25519: wcyZMSHhXOpE2oyTgdvx6LFQK8UOc92poq99mjC7Li8
+                  signature:
+                    Ed25519: meUIklJ4H58cyYmZOaWvH5Kb3weDNiTbj9sD8Z7UaLGHB3zabrPUr5onDfVz9TgTnHA_cNbkDg4_Gsj5uQ0zCQ
+          - id:
+              Blake3: HflWay2xmCYnbqTKYP3utSo0s3v4Ne3vWOBzwHziD-o
+            entry:
+              created: "2024-01-04T07:45:01.291Z"
+              previous_transactions:
+                - Blake3: j98fNieA0pRXwKS6xBMkJYOWOuvOCBKzkOVyzG-2vXA
+              body:
+                MakeClaimV1:
+                  spec:
+                    Url:
+                      Public: "https://news.ycombinator.com/user?id=xX_zefram420_Xx"
+                  name: ~
+            signatures:
+              - Key:
+                  key:
+                    Ed25519: wcyZMSHhXOpE2oyTgdvx6LFQK8UOc92poq99mjC7Li8
+                  signature:
+                    Ed25519: "-1XBmxQAdO1CMXf_ccA4Dr4P8xigaIhNCqCo6MTuBq_61CCBjNAOppP5fSuBHpfpCxovfyh8Z7-XIUwF0i17Bg"
+          - id:
+              Blake3: kFF-yxwdBEqrmxg54ZYAI_Mcq887Z2ajNm0i58L7Nrw
+            entry:
+              created: "2024-01-11T05:26:25.367Z"
+              previous_transactions:
+                - Blake3: HflWay2xmCYnbqTKYP3utSo0s3v4Ne3vWOBzwHziD-o
+              body:
+                AcceptStampV1:
+                  stamp_transaction:
+                    id:
+                      Blake3: I2AV-DfidKBl3kzE7_EAoiIEtYWEwA-xnGaP26MKSrE
+                    entry:
+                      created: "2024-01-11T05:24:27.417Z"
+                      previous_transactions:
+                        - Blake3: 6sIrkkmWjdf1z8vzqNaEJQLYYy4Gm7hPi-9Kb8gyKBA
+                      body:
+                        MakeStampV1:
+                          stamp:
+                            stamper:
+                              Blake3: 1m0c0VviUoSfACXw9ffVzjiLrOGXR7PgPv2VU_yKe_A
+                            stampee:
+                              Blake3: Zef-ZpmdW1CsA-zxqUzHTP2sKZwUqnfV3oQ7Di2gL3A
+                            claim_id:
+                              Blake3: Dr4qJ88VNLMraCqXBGoNO8ILbtizognoTwOvR3o7OtY
+                            confidence: Low
+                            expires: ~
+                    signatures:
+                      - Key:
+                          key:
+                            Ed25519: JKzt4Eo9PNWbLR9V32czyyvIryJIlPsPF8-tMFYSS0E
+                          signature:
+                            Ed25519: DRH8-OnpX_1Wcp12gF1IEjV885RJB3hzzHfalCyvELT1j-HBwWu2Q-OE_ekEcAibTn1czAF6egSpWI92CgskBw
+            signatures:
+              - Key:
+                  key:
+                    Ed25519: wcyZMSHhXOpE2oyTgdvx6LFQK8UOc92poq99mjC7Li8
+                  signature:
+                    Ed25519: dkZtCHtqWW8Ys9Almftv701HqwB1HDjI9w2nrna4n8rgZqnwgM33uTknscDTF0BCze_ZUwFIpN-YxS-CmXcyAA
+signatures:
+  - Key:
+      key:
+        Ed25519: wcyZMSHhXOpE2oyTgdvx6LFQK8UOc92poq99mjC7Li8
+      signature:
+        Ed25519: _VwJWm_ynt2YVQ2uF6JIc4tKHYjBKsiPwXKIz-B4sEG4CY9sbHaKOLCjGt-0sQ-Y8BYLIPz8a9m4cj2J6f8XDA
+```
+</details>
+
+### Algorithms
+
+Let's go over some of the cryptographic algorithms Stamp uses.
+
+#### Serialization
+
+Stamp's primary binary serialization format is [ASN.1 DER][asn1] (yes, that's its real name). This
+expressive serialization format was purpose-built for cryptographic operations and allows *reliably*
+describing objects for signing, hashing, and communications.
+
+For non-binary serialization (such as published identities), Stamp uses [YAML], with binary data encoded
+into URL-safe [Base64][base64].
+
+Stamp uses a multihash format for [hashing], however when displaying hashes used in transaction IDs,
+instead of prepending the hash-type to the serialized base64, Stamp appends them. This effectively
+allows for "vanity" identity IDs that don't have to start with the characters `A` or `B` etc: you can
+have `fred-x895-9idf8` instead of `Afred-x895-9idf8`.
+
+#### Hashing
+
+Stamp uses cryptographic hashes for two purposes: to turn a [serialized][serialization] `TransactionEntry` 
+into a `TransactionID` and to create [policy][policies] IDs from the `TransactionID` that created them.
+
+Hashes are created using a multihash format. What this means is that each hash in Stamp self-describes
+what kind of hash it is, allowing expansion for an arbitrary number of hashing algorithms. Currently,
+Stamp has only implemented [Blake3][blake3] but supports adding more down the road.
+
+#### Signing
+
+WIP
+
+- ed25519
+
+#### Cryptography
+
+WIP
+
+- xchacha20poly1305
+- curve25519xchacha20poly1305
+
+#### Private claims
+
+WIP
+
+- HMACs on private claims
+
+
+[ActivityPub]: https://activitypub.rocks/
+[admin-keys]: #admin-keys
+[asn1]: https://en.wikipedia.org/wiki/ASN.1
+[base64]: https://en.wikipedia.org/wiki/Base64
+[blake3]: https://github.com/BLAKE3-team/BLAKE3
+[capabilities]: #capabilities-and-contexts
+[claims]: #claims
+[contexts]: #contexts
+[hashing]: #hashing
+[keychain]: #keychain
+[policies]: #policy-system
+[private-claims]: #private-claims
+[serialization]: #serialization
+[stampnet]: {{ site.base }}/stampnet
+[stamps]: #stamps
+[transactions]: #transactions
+[YAML]: https://yaml.org/
+

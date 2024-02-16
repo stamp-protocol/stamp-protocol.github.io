@@ -12,14 +12,14 @@ const sass = require('./plugins/sass');
 const page_ref = require('./plugins/page_ref');
 const toc = require('./plugins/toc');
 
-const SRC = process.env['SRC'] || 'www';
+const SRC = process.env['SRC'] || 'src';
 const DEST = process.env['DEST'] || 'dist';
 const URL = process.env['URL'] || 'https://stamp-protocol.github.io';
 const DRAFTS = process.env['DRAFTS'] === '1';
 
 const NUNJUCK_OPTS = {
 	autoescape: false,
-	root: `${__dirname}/www`,
+	root: `${__dirname}/${SRC}`,
 };
 
 Metalsmith(__dirname)
@@ -34,13 +34,14 @@ Metalsmith(__dirname)
 	})
 	.source(`${SRC}/`)
 	.destination(`${DEST}/`)
-	.ignore('**/zefram.stamp')
 	.clean(true)
 	// we never process these directly, so no point in having them LOL
 	.use(remove([
 		'layouts/**/*',
 		'includes/**/*',
 		'css/includes/**/*',
+        // metalsmith parses this as one giant front matter file, so we ignore and solve in the Makefile...
+        'assets/zefram.stamp',
 	]))
 	// deal with drafts
 	.use((files, metalsmith, done) => {

@@ -1,0 +1,216 @@
+---
+layout: page.njk
+title: Getting started with Stamp
+---
+
+## Getting started
+
+Let's download and install Stamp.
+Its current implementation is a CLI application, requiring rust 1.70+ and cargo:
+
+```
+mkdir stamp && cd stamp
+git clone https://github.com/stamp-protocol/core.git
+git clone https://github.com/stamp-protocol/net.git
+git clone https://github.com/stamp-protocol/aux.git
+git clone https://github.com/stamp-protocol/cli.git
+cd cli
+make
+ln -s ./target/debug/cli stamp
+```
+
+Good job! First, let's create an identity.
+
+```
+$ ./stamp id new
+To protect your identity from unauthorized access, enter a long but memorable master passphrase. Choose something
+personal that is easy for you to remember but hard for someone else to guess.
+
+  Example: my dog butch has a friend named snow
+
+You can change this later using the `stamp keychain passwd` command.
+
+Your master passphrase: [hidden]
+
+Generated a new identity with the ID V-oZfxWJMrOqYSCNUMTMT4HO2e6HeEuwfxPoaVLyvIcA
+
+It's a good idea to associate your name and email with your identity.
+Would you like to do this? [Y/n]: y
+Your full name: Jackie Chrome
+Your primary email: jackie@talent.biz
+---
+Success! The identity V-oZfxWJMrOqYSCN has been saved.
+```
+
+Now that you've created your first identity,
+it will be added to your local identity storage. Your identity will have three
+claims: your identity claim, your name claim, and your email claim. You can view
+them like so:
+
+```
+$ ./stamp claim list
+ ID (short)       | Name | Type     | Value             | Created      | # stamps 
+------------------+------+----------+-------------------+--------------+----------
+ ZYNld3W4X6JlQs-7 | -    | identity | V-oZfxWJMrOqYSCN  | Jan 17, 2024 | 0 
+ 9SYQI67ipfJTEEXw | -    | name     | Jackie Chrome     | Jan 17, 2024 | 0 
+ 0Ap8r7tmpB5i9Qsh | -    | email    | jackie@talent.biz | Jan 17, 2024 | 0 
+```
+
+But why settle just for what's given by default? Let's add a claim of our own!
+
+```
+$ ./stamp claim new photo /path/to/picture-of-you.jpg
+```
+
+Well done, your identity has a photo now. People who know what you look like can
+now stamp your photo claim, adding trust to your identity!
+
+Stamp can also handle another type of claim: one that can be verified immediately.
+Both the `domain` and `url` claim types support direct
+verification. Let's try it out (note that you'll need to be able to write to a
+public website to do this).
+
+```
+$ ./stamp claim new url
+Enter the URL you own: https://news.ycombinator.com/user?id=jc-talent-agent
+Claim added. You can finalize this claim and make it verifiable instantly to others by updating the URL
+https://news.ycombinator.com/user?id=jc-talent-agent to contain one of the following values:
+
+  stamp://V-oZfxWJMrOqYSCNUMTMT4HO2e6HeEuwfxPoaVLyvIcA/claim/GGrBktvTJgiUZthHn_N8OH6iYIwCb9NTn7xEXfkQ8igA
+  stamp://V-oZfxWJMrOqYSCN/claim/GGrBktvTJgiUZthH
+  stamp:V-oZfxWJMrOqYSCNUMTMT4HO2e6HeEuwfxPoaVLyvIcA:GGrBktvTJgiUZthHn_N8OH6iYIwCb9NTn7xEXfkQ8igA
+  stamp:V-oZfxWJMrOqYSCN:GGrBktvTJgiUZthH
+```
+
+So let's update your HackerNews profile at the URL you entered to contain
+`stamp:V-oZfxWJMrOqYSCN:GGrBktvTJgiUZthH`. Done? Now things get spicy:
+
+```
+$ ./stamp claim check GGrBktvTJgiUZthH
+
+The claim HflWay2xmCYnbqTK has been verified!
+
+It is very likely that the identity V-oZfxWJMrOqYSCN owns the resource
+https://news.ycombinator.com/user?id=jc-talent-agent
+```
+
+And just like that, you've proven you own your HackerNews profile.
+Notice you don't need a central server to check the validity of the claim
+(suck it, Keybase). You can do it from the comfort of your 430 sq ft $5,700/mo
+San Francisco apartment.
+
+Ok, we've set up our claims. Now what? How do we actually, you know, <em>Stamp&trade;</em>
+things? Let's <a href="{{ site.url }}/assets/zefram.stamp">download Zefram's identity</a>
+(generated using <code>./stamp id publish</code>) and import it into your local storage:
+
+```
+$ ./stamp id import /path/to/zefram.stamp
+```
+
+Now that it's in our local storage, let's view the claims on this identity.
+
+```
+$ ./stamp claim list --id Zef
+ ID (short)       | Name | Type     | Value                                                | Created      | # stamps
+------------------+------+----------+------------------------------------------------------+--------------+----------
+ Dr4qJ88VNLMraCqX | -    | identity | Zef-ZpmdW1CsA-zx                                     | Jan 03, 2024 | 0
+ yMRZQTTIsPdmCuha | -    | name     | Zefram Cochrane                                      | Jan 03, 2024 | 0
+ 13_BWJcu_HrKFQV0 | -    | email    | zef@starfleet.org                                    | Jan 03, 2024 | 0
+ j98fNieA0pRXwKS6 | -    | photo    | <4008 bytes>                                         | Jan 03, 2024 | 0
+ HflWay2xmCYnbqTK | -    | url      | https://news.ycombinator.com/user?id=xX_zefram420_Xx | Jan 03, 2024 | 0
+```
+
+Normally, you'd only stamp a claim if you were actually going to verify it. But
+because we're doing a tutorial, let's just pick a claim and *pretend*
+you've verified it, which is basically what SSL certificate providers do. We're going
+to stamp the `identity` claim.
+
+```
+$ ./stamp stamp new Dr4qJ88VNLMraCqX
+You are about to stamp the claim Dr4qJ88VNLMraCqX made by the identity Zef-ZpmdW1CsA-zx.
+Effectively, you are vouching for them and that their claim is true. You can specify your confidence in the claim:
+    none
+        you are not verifying the claim at all, but wish to stamp it anyway
+    low
+        you have done a quick and dirty verification of the claim
+    medium
+        you're doing a decent amount of verification, such as having them click a verification link in email
+    high
+        you have verified the claim extensively (birth certificates, retinal scans, fingerprint matching, etc)
+    extreme
+        you have known this person for the last 50 years and can be absolutely certain that the claim they are making is correct
+        and they are not a hologram or an android imposter
+
+How confident are you in this claim?: low
+Would you like your stamp to expire on a certain date? [y/N]: n
+Stamp on claim Dr4qJ88VNLMraCqXBGoNO8ILbtizognoTwOvR3o7OtYA created.
+```
+
+Note the lack of fire gifs
+<img class="w-3 h-4 inline-block" alt="fire" src="{{ site.base }}/assets/images/fireanim.gif">
+surrounding the "extreme" option. *This is a bug and we're working on it.* This operation added the
+stamp to *our identity*. By default, stamps are saved to the stamper's identity.
+
+Now, if Zefram wants to accept your stamp onto his identity, he can download your identity from
+StampNet (coming soon!), or the stamp can be exported and sent directly.
+All you need is a way to communicate this stamp to Zef. But, oh, look at that!
+There's an email claim, so you can go ahead and send it to `zefram@starfleet.org`.
+
+Let's export the stamp and email it to Zefram:
+
+```
+$ ./stamp stamp list
+ ID (short)       | Stampee          | Claim            | Confidence | Created      | Expires 
+------------------+------------------+------------------+------------+--------------+---------
+ XEZpJOsE7UQ18Dt1 | Zef-ZpmdW1CsA-zx | Dr4qJ88VNLMraCqX | low        | Jan 17, 2024 | - 
+
+$ ./stamp stamp export XEZpJOsE7UQ18Dt1 -b
+MIIBYqAmMCSgIgQgXEZpJOsE7UQ18Dt1-plqsxGoOVesjaDo8edRw4YspRGhgcMwgcCgCAIGAY0a86QLo
+SgwJjAkoCIEIBhqwZLb0yYIlGbYR5_zfDh-omCMAm_TU5-8RF35EPIoooGJqoGGMIGDoIGAMH6gJjAkoC
+IEIFfqGX8ViTKzqmEgjVDEzE-Bztnuh3hLsH8T6GlS8ryHoSYwJKAiBCBl5_5mmZ1bUKwD7PGpTMdM_aw
+pnBSqd9XehDsOLaAvcKImMCSgIgQgDr4qJ88VNLMraCqXBGoNO8ILbtizognoTwOvR3o7OtajBKECBQCi
+cjBwoG4wbKAkoCIEIPvrP2OC-XFJnZ6T6jE4mDGdMKstcSEzC3QeuekaowlsoUSgQgRAI6i1po8uvsfQs
+HD6xCjfkcTh2OBJQqalzxdJhqBrvRry9sZ9JSczR0o4Hmok_xwIu0Jr6NqiaUc2Wyj74h2nCA
+```
+
+On the receiving end, Zef might do something like this:
+
+```
+$ ./stamp stamp accept /path/to/stamp/downloaded/from/email
+---
+id:
+  Blake3: XEZpJOsE7UQ18Dt1-plqsxGoOVesjaDo8edRw4YspRE
+entry:
+  created: "2024-01-18T05:03:11.371Z"
+  previous_transactions:
+    - Blake3: GGrBktvTJgiUZthHn_N8OH6iYIwCb9NTn7xEXfkQ8ig
+  body:
+    MakeStampV1:
+      stamp:
+        stamper:
+          Blake3: V-oZfxWJMrOqYSCNUMTMT4HO2e6HeEuwfxPoaVLyvIc
+        stampee:
+          Blake3: Zef-ZpmdW1CsA-zxqUzHTP2sKZwUqnfV3oQ7Di2gL3A
+        claim_id:
+          Blake3: Dr4qJ88VNLMraCqXBGoNO8ILbtizognoTwOvR3o7OtY
+        confidence: Low
+        expires: ~
+signatures:
+  - Key:
+      key:
+        Ed25519: "--s_Y4L5cUmdnpPqMTiYMZ0wqy1xITMLdB656RqjCWw"
+      signature:
+        Ed25519: I6i1po8uvsfQsHD6xCjfkcTh2OBJQqalzxdJhqBrvRry9sZ9JSczR0o4Hmok_xwIu0Jr6NqiaUc2Wyj74h2nCA
+
+----------
+Do you wish to accept the above stamp? [Y/n]: Y
+Stamp XEZpJOsE7UQ18Dt1-plqsxGoOVesjaDo8edRw4YspREA has been accepted.
+```
+
+And the stamp is accepted! Zef thanks you for your trust.
+
+[cli]: https://github.com/stamp-protocol/cli
+[cli-get-started]: https://github.com/stamp-protocol/cli#getting-started
+[core]: https://github.com/stamp-protocol/core
+
+
