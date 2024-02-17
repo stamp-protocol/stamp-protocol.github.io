@@ -119,7 +119,27 @@ things? Let's <a href="{{ site.url }}/assets/zefram.stamp">download Zefram's ide
 $ ./stamp id import /path/to/zefram.stamp
 ```
 
-Now that it's in our local storage, let's view the claims on this identity.
+Now Zefram's identity is in your local storage. First, let's check the fingerprint on his
+identity:
+
+```
+$ ./stamp id fingerprint --id Zef
+```
+
+If your terminal isn't from 1997, it will spit out a pixel art image representing the identity
+that looks like this:
+
+<div class="flex justify-center mb-4">
+	<img class="w-20 h-20" src="{{ site.url }}/assets/zefram.fingerprint.svg" alt="Zefram's identity fingerprint, a 16x16 multicolored representation of an identity. His kinda looks like a lobster." />
+</div>
+
+I see a blue and orange lobster...but you're free to come up with your own associations in a
+judgement-free environment. Fingerprints are a security measure. It's possible that someone might
+generate an identity with a string ID that's strikingly similar to Zefram's (like `Zef-ZpmC18adg-xt`),
+but it's highly unlikely that the generated identity will have a remotely similar fingerprint.
+Fingerprints are a great visual indicator of what an identity "looks like."
+
+That's all well and good, so let's view the claims on this identity:
 
 ```
 $ ./stamp claim list --id Zef
