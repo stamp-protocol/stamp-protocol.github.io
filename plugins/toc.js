@@ -11,6 +11,8 @@ module.exports = (options) => {
 			.filter((path) => files[path].generate_toc);
 		needs_toc.forEach((path) => {
 			const file = files[path];
+            const toc_options = file.generate_toc === true ? {} : file.generate_toc;
+            const skip_levels = parseInt(toc_options.skip_levels) || 0;
 			const html = file.contents.toString('utf8');
 			const toc = [];
 			const entries = [];
@@ -22,7 +24,10 @@ module.exports = (options) => {
 					.split(',');
 				// determine the indent level
 				const level = parseInt(tag.replace(/[^0-9]/g, ''));
-				entries.push({tag, id, content, level});
+                if(level < skip_levels + 1) {
+                    return;
+                }
+                entries.push({tag, id, content, level: level - skip_levels});
 			});
 
 			// loop over our stupid entries and build a POJO tree
