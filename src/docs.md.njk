@@ -1,20 +1,21 @@
 ---
 layout: page.njk
 title: 'Documentation'
-generate_toc: true
+generate_toc:
+  skip_levels: 1
 ---
 
 {% from 'includes/components/transaction.njk' import main as transaction %}
 
 <div class="toc md:float-right py-4 ml-4 mb-4 bg-gray-100">{:toc}</div>
 
-## Core concepts
+# Core concepts
 
 Let's go over the different pieces that make up the Stamp protocol and how they
 fit together. First off, we'll look at identities: what it is and the pieces that
 make an identity in Stamp.
 
-### Identity
+## Identity
 
 Your identity in Stamp is a collection of claims you make
 about yourself, "stamps" (signatures) from other identities on your claims that create
@@ -194,7 +195,7 @@ stamps: []
 ```
 </details>
 
-#### Fingerprints
+### Fingerprints
 
 Although identifiers are unique, it's possible someone could maliciously generate one similar
 enough to another one that people might be fooled. For this, we have identity fingerprints:
@@ -209,7 +210,7 @@ fingerprint. Both identifier strings and fingerprints, when used together, offer
 protection against impersonation. That said, [stamps] are the ultimate way to defend against
 impersonation.
 
-### Claims
+## Claims
 
 Your identity contains pieces of information about you that others can verify. These are
 known as "claims" and form a basic building block of your identity. This can be something
@@ -262,7 +263,7 @@ for example) and if you changed hosts you could create a new claim with the name
 require buy-in from the folks at ActivityPub, but it's an example of how named claims can be
 useful as pointers in the distributed/decentralized landscape.
 
-### Stamps
+## Stamps
 
 A "stamp" is a verification by one identity that a claim on another identity has some validity.
 Stamps not only allow you to show trust in others but also allow flows of trust through the
@@ -283,7 +284,7 @@ keys such that only the stamper can decrypt and read the value. This allows the 
 the stamper) to view and verify the claim. Stamps added to private claims are public even if the
 claim's value is encrypted and private.
 
-### Policy system
+## Policy system
 
 A policy is a way of assigning one or more [capabilities] (the ability to either update an identity
 or act on behalf of an identity) to specific keys (known as [admin keys][admin-keys]). No capabilities are
@@ -325,7 +326,7 @@ this is a group identity.
 > as Stamp transactions, it becomes possible to use a group Stamp identity as a conduit for democratic
 > participation in other systems.
 
-#### Admin keys
+### Admin keys
 
 An admin key is a *cryptographic signing key* that lives in the identity's keychain which can be granted
 [capabilities] (the ability to modify or act on behalf of the identity) with the use of policies.
@@ -337,7 +338,7 @@ as defined by a policy, it becomes "valid" and can be verified by other identiti
 Admin keys have a mandatory `name` field and optional `description` field, allowing to distinguish
 between them more easily than having you memorize a bunch of base64 public key values.
 
-#### Capabilities and contexts
+### Capabilities and contexts
 
 Capabilities are granted to various admin keys through the policy system. A capability can grant a
 permission in all cases, or be restricted to *certain contexts.* For instance, a capability might grant
@@ -386,7 +387,7 @@ Context | Description
 
 </details>
 
-#### Recovery
+### Recovery
 
 We've seen the policy system allows multi-signature management of an identity. This in itself might seem
 fairly esoteric, but it has one advantage to the regular, down-home individual Stamp user: recovery.
@@ -400,7 +401,7 @@ How you set this up is up to you: maybe you want your grandson to be able to res
 your sister, and one of your two parents. Maybe four of six friends and an institutional identity
 provider. The only limitation is your imagination, and which people you trust.
 
-### Keychain
+## Keychain
 
 The keychain is a place to hold non-[admin][admin-keys] keys. This enables some of the more basic functions
 of Stamp identities. For instance, you can store an asymmetric key that allows others to send you encrypted
@@ -419,11 +420,11 @@ you might have a key specifically for emails named `email/default`.
 The keychain also stores revoked keys, allowing old messages or signatures to be read/verified while
 discouraging using those keys going forward.
 
-## Architecture
+# Architecture
 
 Let's go over some important pieces about how Stamp works.
 
-### Transactions
+## Transactions
 
 At the core of Stamp is the concept of transactions. A transaction is signed message that can either
 *modify the identity* (create a new claim, revoke a stamp, etc) or *act on the behalf of the identity*
@@ -496,7 +497,7 @@ identity is stolen, it is protected by your master key (so choose a good passphr
 your identity, the private data is stripped out entirely, retaining only public keys and HMACs of private
 data. The protocol is designed with privacy from the ground up.
 
-### DAG
+## DAG
 
 We've covered [transactions], but one part of them we kind of glossed over: the `previous_transactions` field.
 What is this?
@@ -768,11 +769,11 @@ signatures:
 ```
 </details>
 
-### Algorithms
+## Algorithms
 
 Let's go over some of the cryptographic algorithms Stamp uses.
 
-#### Serialization
+### Serialization
 
 Stamp's primary binary serialization format is [ASN.1 DER][asn1] (yes, that's its real name). This
 expressive serialization format was purpose-built for cryptographic operations and allows *reliably*
@@ -786,7 +787,7 @@ instead of prepending the hash-type to the serialized base64, Stamp appends them
 allows for "vanity" identity IDs that don't have to start with the characters `A` or `B` etc: you can
 have `fred-x895-9idf8` instead of `Afred-x895-9idf8`.
 
-#### Hashing
+### Hashing
 
 Stamp uses cryptographic hashes for two purposes: to turn a [serialized][serialization] `TransactionEntry` 
 into a `TransactionID` and to create [policy][policies] IDs from the `TransactionID` that created them.
@@ -795,20 +796,20 @@ Hashes are created using a multihash format. What this means is that each hash i
 what kind of hash it is, allowing expansion for an arbitrary number of hashing algorithms. Currently,
 Stamp has only implemented [Blake3][blake3] but supports adding more down the road.
 
-#### Signing
+### Signing
 
 WIP
 
 - ed25519
 
-#### Cryptography
+### Cryptography
 
 WIP
 
 - xchacha20poly1305
 - curve25519xchacha20poly1305
 
-#### Private claims
+### Private claims
 
 WIP
 
