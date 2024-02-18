@@ -29,7 +29,7 @@ Metalsmith(__dirname)
 			base: '',
 			title: 'Stamp',
 			description: 'A cryptographic identity system',
-			asset_version: 11,
+			asset_version: 12,
 		},
 	})
 	.source(`${SRC}/`)
