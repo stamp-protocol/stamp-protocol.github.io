@@ -41,6 +41,7 @@ Metalsmith(__dirname)
 		'includes/**/*',
 		'css/includes/**/*',
         // metalsmith parses this as one giant front matter file, so we ignore and solve in the Makefile...
+        'assets/andrew.stamp',
         'assets/zefram.stamp',
 	]))
 	// deal with drafts

@@ -10,7 +10,7 @@ MKDIR = mkdir -p ${dir $@}
 allwww := $(shell find $(SRC) -type f)
 allsrc := main.js $(shell find plugins/)
 
-all: $(BUILD)/index.html $(BUILD)/assets/zefram.stamp
+all: $(BUILD)/index.html $(BUILD)/assets/andrew.stamp $(BUILD)/assets/zefram.stamp
 
 $(BUILD)/index.html: $(allsrc) $(allwww) tailwind.config.js postcss.config.js
 	@echo "url is $(URL)"
@@ -18,7 +18,7 @@ $(BUILD)/index.html: $(allsrc) $(allwww) tailwind.config.js postcss.config.js
 	npx postcss $(BUILD)/css/**/*.css --base $(BUILD)/ --dir $(BUILD)/
 
 # this is *required* as a build step because the public stamp file is parsed by frontmatter by metalsmith...
-$(BUILD)/assets/zefram.stamp: $(SRC)/assets/zefram.stamp $(BUILD)/index.html
+$(BUILD)/assets/%.stamp: $(SRC)/assets/%.stamp $(BUILD)/index.html
 	@$(MKDIR)
 	cp $< $@
 
