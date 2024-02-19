@@ -240,6 +240,7 @@ Claim | Description
 `Domain` | Here you can put in a (DNS) domain name you have control over. This is a self-verifying claim in that it doesn't require stamps: it can be verified on the spot through the Stamp claim checker.
 `URL` | Claim that you own a particular URL. This can be a personal website, a profile on a social media page, etc. Like the `Domain` claim, this can be verified directly through Stamp.
 `Address` | Claims that you reside at a physical address.
+`PhoneNumber` | Claims that you own a telephone number.
 `Relation` | Claims a relationship to another Stamp identity. This generally means membership of a particular group represented by Stamp. Relationship claims also have an extension type, allowing you to claim any kind of relationship, such as claiming someone is your grandson. The possibilities are literally infinite.
 `RelationExtension` | Like a `Relation` claim, but the subject does not have to be a Stamp identity: it can be anything that can be serialized into binary. This allows claiming relationships with entities outside of the Stamp protocol.
 `Extension` | The extension claim basically allows you to make any claim you want. If any of the above claim types don't cover your use-case, you can use this claim type to extend Stamp to accommodate you. Extension claims have two parts: a key (binary) that is always publicly-readable and a value that can be public or private.

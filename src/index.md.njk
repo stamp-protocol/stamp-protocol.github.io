@@ -54,7 +54,8 @@ Your primary email: jackie@talent.biz
 Success! The identity V-oZfxWJMrOqYSCN has been saved.
 ```
 
-Now that you've created your first identity,
+Unless your name is Jackie Chrome, you would fill in the name/email fields with
+your own information. Now that you've created your first identity,
 it will be added to your local identity storage. Your identity will have three
 claims: your identity claim, your name claim, and your email claim. You can view
 them like so:
@@ -112,7 +113,8 @@ Notice you don't need a central server to check the validity of the claim
 San Francisco apartment.
 
 Ok, we've set up our claims. Now what? How do we actually, you know, <em>Stamp&trade;</em>
-things? Let's <a href="{{ site.url }}/assets/zefram.stamp">download Zefram's identity</a>
+things? Well, your good friend Zefram Cochrane just started using Stamp, so let's
+[download Zefram's identity][zefram.stamp]
 (generated using <code>./stamp id publish</code>) and import it into your local storage:
 
 ```
@@ -161,8 +163,6 @@ to stamp the `identity` claim.
 $ ./stamp stamp new Dr4qJ88VNLMraCqX
 You are about to stamp the claim Dr4qJ88VNLMraCqX made by the identity Zef-ZpmdW1CsA-zx.
 Effectively, you are vouching for them and that their claim is true. You can specify your confidence in the claim:
-    none
-        you are not verifying the claim at all, but wish to stamp it anyway
     low
         you have done a quick and dirty verification of the claim
     medium
@@ -186,7 +186,7 @@ stamp to *our identity*. By default, stamps are saved to the stamper's identity.
 Now, if Zefram wants to accept your stamp onto his identity, he can download your identity from
 StampNet (coming soon!), or the stamp can be exported and sent directly.
 All you need is a way to communicate this stamp to Zef. But, oh, look at that!
-There's an email claim, so you can go ahead and send it to `zefram@starfleet.org`.
+There's an email claim with the value `zefram@starfleet.org`, so you can go ahead and send it there.
 
 Let's export the stamp and email it to Zefram:
 
@@ -252,4 +252,5 @@ And the stamp is accepted! Zef thanks you for your trust.
 [core]: https://github.com/stamp-protocol/core
 [github]: https://github.com/stamp-protocol
 [releases]: https://github.com/stamp-protocol/cli/releases
+[zefram.stamp]: {{ site.url }}/assets/zefram.stamp
 
