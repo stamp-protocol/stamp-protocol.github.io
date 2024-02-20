@@ -1,9 +1,10 @@
 ---
 id:
-  Blake3: zV4Wma6p5HCAqQbvhR27o9ciMLQvn0P9CiKX6l8PLgk
+  Blake3: pq-pwPjSLjtti2WEaiczbCWFPpHgcVIzrVcQDqjtsgE
 entry:
-  created: "2024-02-19T01:19:18.403Z"
-  previous_transactions: []
+  created: "2024-02-20T02:58:44.160Z"
+  previous_transactions:
+    - Blake3: mXvBpZWeb4I1fDJVotXKqOJbxiFQ9_GyQLr1cvbUE1M
   body:
     PublishV1:
       transactions:
@@ -292,5 +293,5 @@ signatures:
       key:
         Ed25519: oOY0cJKeJsKPuwG7TEcxbavf2UyjbSj5IWkewVQmArk
       signature:
-        Ed25519: Z7gBjoCmfu7TZC246Fa37iyDpgqXjtx73gHONBLUWiXENj8bmmk6r_m8R3z1lXNhnhVodsVTrWngP1L7JpQPAw
+        Ed25519: 3cjl9QIy-z5ERbicswrrcpuJCMrT8No-ufyyPiT_vVzZU9E8e1npDgcPSRt0PLqNXEk7-wuousvae8C6IIrsCw
 

@@ -17,7 +17,8 @@ $(BUILD)/index.html: $(allsrc) $(allwww) tailwind.config.js postcss.config.js
 	SRC=$(SRC) DEST=$(BUILD) URL=$(URL) node main
 	npx postcss $(BUILD)/css/**/*.css --base $(BUILD)/ --dir $(BUILD)/
 
-# this is *required* as a build step because the public stamp file is parsed by frontmatter by metalsmith...
+# this is *required* as a build step because the public stamp file is parsed as frontmatter by metalsmith
+# # and we end up with blank .stamp files in the build dir
 $(BUILD)/assets/%.stamp: $(SRC)/assets/%.stamp $(BUILD)/index.html
 	@$(MKDIR)
 	cp $< $@
@@ -27,16 +28,4 @@ clean:
 
 watch: all
 	while true; do inotifywait -qr -e close_write *.js $(SRC)/ plugins/; make; done
-
-publish: override URL := ''
-publish:
-	@echo "Remember to commit your changes to master for publishing to work!"
-	@sleep 5
-	git checkout publish
-	git merge master
-	make clean all
-	git add .
-	git commit -m "build"
-	git push
-	git checkout -
 

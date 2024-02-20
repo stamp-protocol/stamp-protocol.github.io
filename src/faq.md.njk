@@ -115,10 +115,43 @@ corporations or antiquated state bureaus don't end up holding the reigns.
 
 Join Stamp and take back your electronic identity!
 
+<a id="verify"></a>
+# How do I verify the release files?
+
+[Download the release file for your platform][releases] and also grab the `cli.sha256sums`,
+`cli.sha256sums.gpg.sig`, and `cli.sha256sums.stamp.sig` files.
+
+1. First, we need to verify the `cli.sha256sums` file.
+
+   If you want to verify using GPG, [download the signing key][verify-gpg] and do the following:
+
+   ```
+   gpg --import andrew.gpg
+   gpg --verify cli.sha256sums.gpg.sig cli.sha256sums
+   ```
+
+   Make sure the output says `Good signature from "Andrew Lyon <orthecreedence@gmail.com>"`!! If
+   not, do not continue.
+
+   If verifying using Stamp, [download the stamp identity][verify-stamp] and do the following:
+
+   ```
+   stamp id import andrew.stamp
+   stamp sig verify cli.sha256sums.stamp.sig cli.sha256sums
+   ```
+
+   Make sure the output says `This signature is valid`! If not, do not continue.
+2. Now that we've verified our checksum file, run `sha256sum <downloaded release file>` and compare the
+resulting hash to the corresponding entry in `cli.sha256sums`. They should match exactly. If not, the release
+has been tampered with. If they match, congratulations, you have an official version of Stamp!
+
 [gpg-setup-guide]: https://alexcabal.com/creating-the-perfect-gpg-keypair
 [keyserver-exploit]: https://gist.github.com/rjhansen/67ab921ffb4084c865b3618d6955275f
 [pgp-packet-name]: https://datatracker.ietf.org/doc/html/rfc4880#section-5.11
 [pgp-packet-photo]: https://datatracker.ietf.org/doc/html/rfc4880#section-5.12.1
 [private-claims]: {{ site.url }}/docs#private-claims
+[releases]: https://github.com/stamp-protocol/cli/releases
 [stampnet]: {{ site.url }}/stampnet
+[verify-gpg]: {{ site.url }}/assets/andrew.gpg
+[verify-stamp]: {{ site.url }}/assets/andrew.stamp
 
