@@ -9,6 +9,10 @@
 	.button {@apply button-plain bg-primary text-white sm:bg-primary/[0.80] sm:hover:bg-primary sm:transition-colors;}
 }
 
+// icons
+@font-face {font-family: 'Icons'; src: url('../assets/fonts/icons.woff2?v1');}
+icon {font-family: 'Icons';}
+
 header, .main-content {
 	a:not(.custom) {@apply text-link;}
 	a:not(.custom):hover {@apply underline;}
