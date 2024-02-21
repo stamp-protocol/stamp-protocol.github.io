@@ -1,8 +1,7 @@
 ---
 layout: page.njk
 title: 'Documentation'
-generate_toc:
-  skip_levels: 1
+generate_toc: true
 ---
 
 {% from 'includes/components/transaction.njk' import main as transaction %}
@@ -287,10 +286,11 @@ claim's value is encrypted and private.
 
 ## Policy system
 
-A policy is a way of assigning one or more [capabilities] (the ability to either update an identity
-or act on behalf of an identity) to specific keys (known as [admin keys][admin-keys]). No capabilities are
-assigned by default so policies additively grant permissions to one or more admin keys.
-Policies allow arbitrary combinations of admin keys to be specified, creating a robust
+Policies are a way to describe what [admin keys][admin-keys] have which [capabilities] to modify
+the identity or act on behalf of the identity. A Stamp identity can have any number of policies,
+each one additively assigning more permissions to various keys.
+
+Each policy allows arbitrary combinations of admin keys to be specified, creating a robust
 multi-signature system. This opens the door for logic like:
 
 ```yaml
@@ -326,6 +326,9 @@ this is a group identity.
 > Because things like issuing signatures or creating transactions for outside systems are all modeled
 > as Stamp transactions, it becomes possible to use a group Stamp identity as a conduit for democratic
 > participation in other systems.
+
+So where do policies come from? They are specified in the initial [transaction][transactions] that creates
+the identity, and afterwards can be added or removed by issuing valid corresponding transactions as well.
 
 ### Admin keys
 
@@ -423,7 +426,19 @@ discouraging using those keys going forward.
 
 # Architecture
 
-Let's go over some important pieces about how Stamp works.
+Let's go over some important pieces about how Stamp works. Each Stamp identity is a [linked list][dag] of
+[transactions], each one signed by one or more [admin keys][admin-keys]. The admin key signatures on each
+transaction must match a [policy][policies] to be considered valid.
+
+<div class="flex justify-center mb-4">
+	<img class="w-7/12" src="{{ site.url }}/assets/images/stamp-overview.svg" alt="Diagram showing how Stamp uses a transaction model, controlled by a policy system, to build identities" />
+</div>
+
+Then starting with an empty identity each transaction is run, in order, updating the identity as it runs.
+The final output is a cryptographically-verifiable identity build from a set of transactions that all follow
+the required policies.
+
+Let's get in for a closer look.
 
 ## Transactions
 
@@ -468,7 +483,7 @@ Transaction {
 Transaction | Description
 --- | ---
 `CreateIdentity` | Creates a new identity with a set of [admin keys][admin-keys] and [policies].
-`ResetIdentity` | Replaces the [admin keys][admin-keys] and [policies] of an existing identity.
+`ResetIdentity` | Replaces the [admin keys][admin-keys] and [policies] of an existing identity. This is a good transaction type to use for recovering an identity.
 `AddAdminKey` | Adds a new [admin key][admin-keys].
 `EditAdminKey` | Edits an existing [admin key's][admin-keys] name and/or description.
 `RevokeAdminKey` | Revokes an [admin key][admin-keys].
@@ -825,6 +840,7 @@ WIP
 [capabilities]: #capabilities-and-contexts
 [claims]: #claims
 [contexts]: #contexts
+[dag]: #dag
 [hashing]: #hashing
 [keychain]: #keychain
 [policies]: #policy-system
